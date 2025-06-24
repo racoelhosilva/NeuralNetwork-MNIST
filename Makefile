@@ -20,3 +20,8 @@ run: all
 
 clean:
 	rm -rf $(OUTDIR)
+
+.PHONY: data
+
+data:
+	scripts/download_mnist.sh
