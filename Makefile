@@ -1,7 +1,7 @@
 CXX := g++
-CXXFLAGS := -std=c++17 -Wall -Wextra -O2
+CXXFLAGS := -std=c++23 -Wall -Wextra -pedantic-errors -Werror -O2 -Isrc
 
-SRC := src/main.cpp
+SRC := $(shell find src -name '*.cpp')
 OUTDIR := build
 TARGET := $(OUTDIR)/main
 
@@ -11,7 +11,7 @@ all: $(TARGET)
 
 $(TARGET): $(SRC)
 	@mkdir -p $(OUTDIR)
-	$(CXX) $(CXXFLAGS) $< -o $@
+	$(CXX) $(CXXFLAGS) $(SRC) -o $@
 
 .PHONY: run clean
 
@@ -24,4 +24,4 @@ clean:
 .PHONY: data
 
 data:
-	scripts/download_mnist.sh
+	bash scripts/download_mnist.sh
