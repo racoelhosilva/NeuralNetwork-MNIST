@@ -2,6 +2,7 @@
 #define MATRIX_H
 
 #include <stdexcept>
+#include <utility>
 #include <vector>
 
 class Matrix {
@@ -16,6 +17,12 @@ public:
             init
         ) 
     {}
+
+    [[nodiscard]] constexpr int rows() const noexcept { return m_rows; }
+    [[nodiscard]] constexpr int cols() const noexcept { return m_cols; }
+    [[nodiscard]] constexpr std::pair<int, int> shape() const noexcept {
+        return std::pair<int, int> {m_rows, m_cols};
+    }
 
 private:
     const int m_rows;
