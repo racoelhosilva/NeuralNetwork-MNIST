@@ -2,14 +2,14 @@
 #include <iostream>
 
 int main() {
-    Matrix m {5, 7};
+    Matrix m1 {3, 2, 1};
+    Matrix m2 {3, 2, 2};
 
-    m.at(2,3) = 4;
-    m[2, 4] = 5;
-    std::cout << m << '\n';
+    std::cout << m1 << '\n';
+    std::cout << m2 << '\n';
 
-    m.fill(3.14);
-    std::cout << m << '\n';
+    std::cout << m1 + m2 << '\n';
+    std::cout << m1 - m2 << '\n';
 
     return 0;
 }

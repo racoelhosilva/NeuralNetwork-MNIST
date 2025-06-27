@@ -9,8 +9,8 @@ public:
     Matrix() = delete;
 
     explicit Matrix(int rows, int cols, double init = 0.0)
-        : m_rows {valid_dimension(rows)}
-        , m_cols {valid_dimension(cols)}
+        : m_rows {validate_dimension(rows)}
+        , m_cols {validate_dimension(cols)}
         , m_data(
             static_cast<size_t>(rows) * static_cast<size_t>(cols), 
             init
@@ -27,15 +27,17 @@ public:
     [[nodiscard]] const double& at(int row, int col) const;
     void fill(double value) noexcept;
 
-    friend std::ostream& operator<<(std::ostream& out, const Matrix& matrix);
+    [[nodiscard]] Matrix& operator+=(const Matrix& rhs);
+    [[nodiscard]] Matrix& operator-=(const Matrix& rhs);
 private:
     const int m_rows;
     const int m_cols;
     std::vector<double> m_data;
 
-    [[nodiscard]] static int valid_dimension(int dim);
-    [[nodiscard]] int valid_row(int row) const;
-    [[nodiscard]] int valid_col(int col) const;
+    [[nodiscard]] static int validate_dimension(int dim);
+    [[nodiscard]] int validate_row(int row) const;
+    [[nodiscard]] int validate_col(int col) const;
+    void check_matching_dimensions(const Matrix& other) const;
     [[nodiscard]] constexpr std::size_t index(int row, int col) const noexcept;
 };
 
@@ -60,11 +62,11 @@ inline const double& Matrix::operator[](int row, int col) const noexcept {
 }
 
 inline double& Matrix::at(int row, int col) {
-    return m_data[index(valid_row(row), valid_col(col))];
+    return m_data[index(validate_row(row), validate_col(col))];
 }
 
 inline const double& Matrix::at(int row, int col) const {
-    return m_data[index(valid_row(row), valid_col(col))];
+    return m_data[index(validate_row(row), validate_col(col))];
 }
 
 inline constexpr size_t Matrix::index(int row, int col) const noexcept {
@@ -72,5 +74,10 @@ inline constexpr size_t Matrix::index(int row, int col) const noexcept {
         * static_cast<size_t>(m_cols) 
         + static_cast<size_t>(col);
 }
+
+[[nodiscard]] Matrix operator+(Matrix lhs, const Matrix& rhs);
+[[nodiscard]] Matrix operator-(Matrix lhs, const Matrix& rhs);
+
+std::ostream& operator<<(std::ostream& out, const Matrix& matrix);
 
 #endif

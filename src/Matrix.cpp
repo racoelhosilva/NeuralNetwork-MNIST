@@ -7,7 +7,31 @@ void Matrix::fill(double value) noexcept {
     std::fill(m_data.begin(), m_data.end(), value);
 }
 
-int Matrix::valid_dimension(int dim) {
+Matrix& Matrix::operator+=(const Matrix &rhs) {
+    check_matching_dimensions(rhs);
+    for (size_t idx { 0 }; idx < m_data.size(); ++idx) {
+        m_data[idx] += rhs.m_data[idx];
+    }
+    return *this;
+}
+
+Matrix operator+(Matrix m1, const Matrix& m2) {
+    return m1 += m2;
+}
+
+Matrix& Matrix::operator-=(const Matrix &rhs) {
+    check_matching_dimensions(rhs);
+    for (size_t idx { 0 }; idx < m_data.size(); ++idx) {
+        m_data[idx] -= rhs.m_data[idx];
+    }
+    return *this;
+}
+
+Matrix operator-(Matrix m1, const Matrix& m2) {
+    return m1 -= m2;
+}
+
+int Matrix::validate_dimension(int dim) {
     if (dim <= 0){
         throw std::invalid_argument(std::format(
             "invalid matrix dimension ({}) must be >= 1",
@@ -17,7 +41,7 @@ int Matrix::valid_dimension(int dim) {
     return dim;
 }
 
-int Matrix::valid_row(int row) const {
+int Matrix::validate_row(int row) const {
     if (row < 0 || row >= m_rows) {
         throw std::out_of_range(std::format(
             "row index ({}) is out of bounds [0, {}]",
@@ -27,7 +51,7 @@ int Matrix::valid_row(int row) const {
     return row;
 }
 
-int Matrix::valid_col(int col) const {
+int Matrix::validate_col(int col) const {
     if (col < 0 || col >= m_cols) {
         throw std::out_of_range(std::format(
             "col index ({}) is out of bounds [0, {}]",
@@ -35,6 +59,15 @@ int Matrix::valid_col(int col) const {
         ));
     }
     return col;
+}
+
+void Matrix::check_matching_dimensions(const Matrix& other) const {
+    if (rows() != other.rows() || cols() != other.cols()) {
+        throw std::invalid_argument(std::format(
+            "unmatched matrix dimensions ({}x{}) must be ({}x{})",
+            other.rows(), other.cols(), rows(), cols()
+        ));
+    } 
 }
 
 std::ostream& operator<<(std::ostream& out, const Matrix& matrix) {
