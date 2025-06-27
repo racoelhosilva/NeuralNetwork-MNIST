@@ -24,4 +24,4 @@ clean:
 .PHONY: data
 
 data:
-	bash scripts/download_mnist.sh
+	@bash scripts/download_mnist.sh
