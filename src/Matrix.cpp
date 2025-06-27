@@ -46,6 +46,14 @@ Matrix operator*(double scalar, Matrix matrix) {
     return matrix *= scalar;
 }
 
+Matrix Matrix::operator-() const {
+    Matrix m { *this };
+    for (auto& element : m.m_data) {
+        element = -element;
+    }
+    return m;
+}
+
 int Matrix::validate_dimension(int dim) {
     if (dim <= 0){
         throw std::invalid_argument(std::format(

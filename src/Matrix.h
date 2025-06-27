@@ -30,6 +30,7 @@ public:
     Matrix& operator+=(const Matrix& rhs);
     Matrix& operator-=(const Matrix& rhs);
     Matrix& operator*=(double scalar) noexcept;
+    Matrix operator-() const;
 private:
     const int m_rows;
     const int m_cols;
