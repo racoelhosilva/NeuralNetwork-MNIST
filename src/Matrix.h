@@ -1,6 +1,7 @@
 #ifndef MATRIX_H
 #define MATRIX_H
 
+#include <ostream>
 #include <vector>
 
 class Matrix {
@@ -25,6 +26,7 @@ public:
     [[nodiscard]] double& at(int row, int col);
     [[nodiscard]] const double& at(int row, int col) const;
 
+    friend std::ostream& operator<<(std::ostream& out, const Matrix& matrix);
 private:
     const int m_rows;
     const int m_cols;
@@ -64,7 +66,7 @@ inline const double& Matrix::at(int row, int col) const {
     return m_data[index(valid_row(row), valid_col(col))];
 }
 
-inline constexpr std::size_t Matrix::index(int row, int col) const noexcept {
+inline constexpr size_t Matrix::index(int row, int col) const noexcept {
     return static_cast<size_t>(row) 
         * static_cast<size_t>(m_cols) 
         + static_cast<size_t>(col);

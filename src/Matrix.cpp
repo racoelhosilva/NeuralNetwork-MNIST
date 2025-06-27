@@ -1,6 +1,20 @@
 #include "Matrix.h"
 #include <format>
+#include <iomanip>
 #include <stdexcept>
+
+std::ostream& operator<<(std::ostream& out, const Matrix& matrix) {
+    out << std::fixed << std::setprecision(3);
+    for (int row = 0; row < matrix.rows(); row++) {
+        out << "[ ";
+        for (int col = 0; col < matrix.cols(); col++) {
+            out << matrix[row, col] << " ";
+        }
+        out << "]\n";
+    }
+    out << "(" << matrix.rows() << " rows, " << matrix.cols() << " cols)\n";
+    return out;
+}
 
 int Matrix::valid_dimension(int dim) {
     if (dim <= 0){
