@@ -8,5 +8,8 @@ int main() {
     m[2, 4] = 5;
     std::cout << m << '\n';
 
+    m.fill(3.14);
+    std::cout << m << '\n';
+
     return 0;
 }

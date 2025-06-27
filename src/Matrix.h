@@ -25,6 +25,7 @@ public:
     [[nodiscard]] const double& operator[](int row, int col) const noexcept;
     [[nodiscard]] double& at(int row, int col);
     [[nodiscard]] const double& at(int row, int col) const;
+    void fill(double value) noexcept;
 
     friend std::ostream& operator<<(std::ostream& out, const Matrix& matrix);
 private:

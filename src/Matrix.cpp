@@ -3,17 +3,8 @@
 #include <iomanip>
 #include <stdexcept>
 
-std::ostream& operator<<(std::ostream& out, const Matrix& matrix) {
-    out << std::fixed << std::setprecision(3);
-    for (int row = 0; row < matrix.rows(); row++) {
-        out << "[ ";
-        for (int col = 0; col < matrix.cols(); col++) {
-            out << matrix[row, col] << " ";
-        }
-        out << "]\n";
-    }
-    out << "(" << matrix.rows() << " rows, " << matrix.cols() << " cols)\n";
-    return out;
+void Matrix::fill(double value) noexcept {
+    std::fill(m_data.begin(), m_data.end(), value);
 }
 
 int Matrix::valid_dimension(int dim) {
@@ -44,4 +35,17 @@ int Matrix::valid_col(int col) const {
         ));
     }
     return col;
+}
+
+std::ostream& operator<<(std::ostream& out, const Matrix& matrix) {
+    out << std::fixed << std::setprecision(3);
+    for (int row = 0; row < matrix.rows(); row++) {
+        out << "[ ";
+        for (int col = 0; col < matrix.cols(); col++) {
+            out << matrix[row, col] << " ";
+        }
+        out << "]\n";
+    }
+    out << "(" << matrix.rows() << " rows, " << matrix.cols() << " cols)\n";
+    return out;
 }
