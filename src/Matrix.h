@@ -27,8 +27,9 @@ public:
     [[nodiscard]] const double& at(int row, int col) const;
     void fill(double value) noexcept;
 
-    [[nodiscard]] Matrix& operator+=(const Matrix& rhs);
-    [[nodiscard]] Matrix& operator-=(const Matrix& rhs);
+    Matrix& operator+=(const Matrix& rhs);
+    Matrix& operator-=(const Matrix& rhs);
+    Matrix& operator*=(double scalar) noexcept;
 private:
     const int m_rows;
     const int m_cols;
@@ -77,6 +78,8 @@ inline constexpr size_t Matrix::index(int row, int col) const noexcept {
 
 [[nodiscard]] Matrix operator+(Matrix lhs, const Matrix& rhs);
 [[nodiscard]] Matrix operator-(Matrix lhs, const Matrix& rhs);
+[[nodiscard]] Matrix operator*(Matrix matrix, double scalar);
+[[nodiscard]] Matrix operator*(double scalar, Matrix matrix);
 
 std::ostream& operator<<(std::ostream& out, const Matrix& matrix);
 

@@ -11,5 +11,8 @@ int main() {
     std::cout << m1 + m2 << '\n';
     std::cout << m1 - m2 << '\n';
 
+    std::cout << 2.5 * m1 << '\n';
+    std::cout << m2 * 2.5 << '\n';
+
     return 0;
 }

@@ -31,6 +31,21 @@ Matrix operator-(Matrix m1, const Matrix& m2) {
     return m1 -= m2;
 }
 
+Matrix& Matrix::operator*=(double scalar) noexcept {
+    for (auto& element : m_data) {
+        element *= scalar;
+    }
+    return *this;
+}
+
+Matrix operator*(Matrix matrix, double scalar) {
+    return matrix *= scalar;
+}
+
+Matrix operator*(double scalar, Matrix matrix) {
+    return matrix *= scalar;
+}
+
 int Matrix::validate_dimension(int dim) {
     if (dim <= 0){
         throw std::invalid_argument(std::format(
