@@ -20,12 +20,16 @@ public:
     [[nodiscard]] constexpr int cols() const noexcept;
     [[nodiscard]] constexpr std::pair<int, int> shape() const noexcept;
 
+    [[nodiscard]] double& operator[](int row, int col) noexcept;
+    [[nodiscard]] const double& operator[](int row, int col) const noexcept;
+
 private:
     const int m_rows;
     const int m_cols;
     std::vector<double> m_data;
 
-    static int valid_dimension(int dim);
+    [[nodiscard]] static int valid_dimension(int dim);
+    [[nodiscard]] constexpr std::size_t index(int row, int col) const noexcept;
 };
 
 inline constexpr int Matrix::rows() const noexcept {
@@ -38,6 +42,20 @@ inline constexpr int Matrix::cols() const noexcept {
 
 inline constexpr std::pair<int, int> Matrix::shape() const noexcept {
     return std::pair<int, int> {m_rows, m_cols};
+}
+
+inline double& Matrix::operator[](int row, int col) noexcept {
+    return m_data[index(row, col)];
+}
+
+inline const double& Matrix::operator[](int row, int col) const noexcept { 
+    return m_data[index(row, col)];
+}
+
+inline constexpr std::size_t Matrix::index(int row, int col) const noexcept {
+    return static_cast<size_t>(row) 
+        * static_cast<size_t>(m_cols) 
+        + static_cast<size_t>(col);
 }
 
 #endif
