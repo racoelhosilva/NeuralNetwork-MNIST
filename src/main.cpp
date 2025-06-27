@@ -11,6 +11,7 @@ int main() {
     std::pair<int, int> p { m.shape() };
     std::cout << p.first << ' ' << p.second << '\n';
 
+    m.at(2,3) = 4;
     m[2, 4] = 5;
     std::cout << m[2,3] << ' ' << m[2,4] << '\n';
 

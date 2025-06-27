@@ -22,6 +22,8 @@ public:
 
     [[nodiscard]] double& operator[](int row, int col) noexcept;
     [[nodiscard]] const double& operator[](int row, int col) const noexcept;
+    [[nodiscard]] double& at(int row, int col);
+    [[nodiscard]] const double& at(int row, int col) const;
 
 private:
     const int m_rows;
@@ -29,6 +31,8 @@ private:
     std::vector<double> m_data;
 
     [[nodiscard]] static int valid_dimension(int dim);
+    [[nodiscard]] int valid_row(int row) const;
+    [[nodiscard]] int valid_col(int col) const;
     [[nodiscard]] constexpr std::size_t index(int row, int col) const noexcept;
 };
 
@@ -50,6 +54,14 @@ inline double& Matrix::operator[](int row, int col) noexcept {
 
 inline const double& Matrix::operator[](int row, int col) const noexcept { 
     return m_data[index(row, col)];
+}
+
+inline double& Matrix::at(int row, int col) {
+    return m_data[index(valid_row(row), valid_col(col))];
+}
+
+inline const double& Matrix::at(int row, int col) const {
+    return m_data[index(valid_row(row), valid_col(col))];
 }
 
 inline constexpr std::size_t Matrix::index(int row, int col) const noexcept {
