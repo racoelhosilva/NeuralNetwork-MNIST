@@ -43,6 +43,7 @@ namespace mnist {
         std::vector<uint8_t> buffer(rows * cols);
         uint8_t label;
         std::vector<mnist::Record> records;
+        records.reserve(limit);
 
         while (limit--) {
             images.read(reinterpret_cast<char*>(buffer.data()), buffer.size());
