@@ -1,12 +1,13 @@
 #include "Matrix.h"
 #include <iostream>
 
-int main() {
-    Matrix m1 {2, 1, 1};
-    Matrix m2 {1, 2, 2};
+double complex(double x) {
+    return x > 0 ? 2*x : 0;
+}
 
-    std::cout << m1 * m2 << '\n';
-    std::cout << m2 * m1 << '\n';
+int main() {
+    Matrix m1 {2, 5, 3.7};
+    std::cout << m1.apply(complex) << '\n';
 
     return 0;
 }

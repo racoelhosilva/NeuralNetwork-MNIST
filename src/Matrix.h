@@ -57,7 +57,10 @@ public:
     friend bool operator!=(const Matrix& lhs, const Matrix& rhs);
 
     [[nodiscard]] Matrix transpose() const;
-    [[nodiscard]] Matrix mult(const Matrix& matrix) const; 
+    [[nodiscard]] Matrix mult(const Matrix& matrix) const;
+    
+    template <typename Function>
+    [[nodiscard]] Matrix apply(Function&& f) const;
 private:
     const int m_rows;
     const int m_cols;
@@ -103,6 +106,15 @@ inline constexpr size_t Matrix::index(int row, int col) const noexcept {
     return static_cast<size_t>(row) 
         * static_cast<size_t>(m_cols) 
         + static_cast<size_t>(col);
+}
+
+template <typename Function>
+inline Matrix Matrix::apply(Function&& f) const {
+    Matrix result { *this };
+    for (auto& x : result.m_data) {
+        x = std::forward<Function>(f)(x);
+    }
+    return result;
 }
 
 [[nodiscard]] Matrix operator+(Matrix lhs, const Matrix& rhs);
