@@ -1,19 +1,24 @@
 CXX := g++
-CXXFLAGS := -std=c++17 -Wall -Wextra -O2
+CXXFLAGS := -std=c++23 -Wall -Wextra -pedantic-errors -Werror -O2 -Isrc
+CXXFLAGS += -MMD -MP
 
-SRC := src/main.cpp
+SRC := $(shell find src -name '*.cpp')
+OBJ := $(patsubst src/%.cpp, build/%.o, $(SRC))
 OUTDIR := build
 TARGET := $(OUTDIR)/main
 
-.PHONY: all
+.PHONY: all run clean data
 
 all: $(TARGET)
 
-$(TARGET): $(SRC)
-	@mkdir -p $(OUTDIR)
-	$(CXX) $(CXXFLAGS) $< -o $@
+$(TARGET): $(OBJ)
+	$(CXX) $(CXXFLAGS) $^ -o $@
 
-.PHONY: run clean
+build/%.o: src/%.cpp
+	@mkdir -p $(dir $@)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+-include $(OBJ:.o=.d)
 
 run: all
 	@$(TARGET)
@@ -21,7 +26,5 @@ run: all
 clean:
 	rm -rf $(OUTDIR)
 
-.PHONY: data
-
 data:
-	scripts/download_mnist.sh
+	@bash scripts/download_mnist.sh
