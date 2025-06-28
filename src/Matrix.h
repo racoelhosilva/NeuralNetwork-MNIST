@@ -17,6 +17,16 @@ public:
         ) 
     {}
 
+    explicit Matrix(int rows, int cols, std::vector<double>&& data)
+        : m_rows {validate_dimension(rows)}
+        , m_cols {validate_dimension(cols)}
+        , m_data {std::move(data)} 
+    {
+        if (m_data.size() != static_cast<size_t>(rows) * static_cast<size_t>(cols)) {
+            throw std::invalid_argument("unmatched row/col and data matrix size");
+        }
+    }
+
     ~Matrix() = default;
 
     Matrix(const Matrix&) = default;
