@@ -54,6 +54,16 @@ Matrix Matrix::operator-() const {
     return m;
 }
 
+[[nodiscard]] bool operator==(const Matrix& lhs, const Matrix& rhs) {
+    if (lhs.rows() != rhs.rows()) { return false; }
+    if (lhs.cols() != rhs.cols()) { return false; }
+    return lhs.m_data == rhs.m_data;
+}
+
+[[nodiscard]] bool operator!=(const Matrix& lhs, const Matrix& rhs) {
+    return !(lhs == rhs);
+}
+
 int Matrix::validate_dimension(int dim) {
     if (dim <= 0){
         throw std::invalid_argument(std::format(

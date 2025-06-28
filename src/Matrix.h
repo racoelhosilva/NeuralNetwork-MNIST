@@ -22,7 +22,7 @@ public:
     Matrix(const Matrix&) = default;
     Matrix(Matrix&&) = default;
 
-    [[nodiscard]] Matrix& operator=(const Matrix& matrix) {
+    Matrix& operator=(const Matrix& matrix) {
         if (this != &matrix) [[likely]] {
             check_matching_dimensions(matrix);
             m_data = matrix.m_data;
@@ -30,7 +30,7 @@ public:
         return *this;
     }
 
-    [[nodiscard]] Matrix& operator=(Matrix&& matrix) {
+    Matrix& operator=(Matrix&& matrix) {
         if (this != &matrix) [[likely]] {
             check_matching_dimensions(matrix);
             m_data = std::move(matrix.m_data);
@@ -52,6 +52,9 @@ public:
     Matrix& operator-=(const Matrix& rhs);
     Matrix& operator*=(double scalar) noexcept;
     Matrix operator-() const;
+
+    friend bool operator==(const Matrix& lhs, const Matrix& rhs);
+    friend bool operator!=(const Matrix& lhs, const Matrix& rhs);
 private:
     const int m_rows;
     const int m_cols;
