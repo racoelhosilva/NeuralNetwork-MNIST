@@ -57,6 +57,7 @@ public:
     friend bool operator!=(const Matrix& lhs, const Matrix& rhs);
 
     [[nodiscard]] Matrix transpose() const;
+    [[nodiscard]] Matrix mult(const Matrix& matrix) const; 
 private:
     const int m_rows;
     const int m_cols;
@@ -66,6 +67,7 @@ private:
     [[nodiscard]] int validate_row(int row) const;
     [[nodiscard]] int validate_col(int col) const;
     void check_matching_dimensions(const Matrix& other) const;
+    void check_mult_dimensions(const Matrix& other) const;
     [[nodiscard]] constexpr std::size_t index(int row, int col) const noexcept;
 };
 
@@ -107,6 +109,7 @@ inline constexpr size_t Matrix::index(int row, int col) const noexcept {
 [[nodiscard]] Matrix operator-(Matrix lhs, const Matrix& rhs);
 [[nodiscard]] Matrix operator*(Matrix matrix, double scalar);
 [[nodiscard]] Matrix operator*(double scalar, Matrix matrix);
+[[nodiscard]] Matrix operator*(const Matrix& lhs, const Matrix& rhs);
 
 std::ostream& operator<<(std::ostream& out, const Matrix& matrix);
 

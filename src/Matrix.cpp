@@ -74,6 +74,24 @@ Matrix Matrix::transpose() const {
     return transposed;
 }
 
+Matrix Matrix::mult(const Matrix& matrix) const {
+    check_mult_dimensions(matrix);
+    Matrix product { rows(), matrix.cols(), 0.0 };
+    for (int i { 0 }; i < m_rows; ++i) {
+        for (int k { 0 }; k < m_cols; ++k) {
+            const double aik = (*this)[i, k];
+            for (int j {0}; j < matrix.cols(); ++j) {
+                product[i, j] += aik * matrix[k, j];
+            }
+        }
+    }
+    return product;
+}
+
+Matrix operator*(const Matrix& lhs, const Matrix& rhs) {
+    return lhs.mult(rhs);
+}
+
 int Matrix::validate_dimension(int dim) {
     if (dim <= 0){
         throw std::invalid_argument(std::format(
@@ -107,8 +125,17 @@ int Matrix::validate_col(int col) const {
 void Matrix::check_matching_dimensions(const Matrix& other) const {
     if (rows() != other.rows() || cols() != other.cols()) {
         throw std::invalid_argument(std::format(
-            "unmatched matrix dimensions ({}x{}) must be ({}x{})",
+            "mismatched matrix dimensions ({}x{}) must be ({}x{})",
             other.rows(), other.cols(), rows(), cols()
+        ));
+    } 
+}
+
+void Matrix::check_mult_dimensions(const Matrix& other) const {
+    if (cols() != other.rows()) {
+        throw std::invalid_argument(std::format(
+            "mismatched matrix multiplication inner dimensions ({} and {})",
+            cols(), other.rows()
         ));
     } 
 }
