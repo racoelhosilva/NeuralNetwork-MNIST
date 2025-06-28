@@ -17,6 +17,27 @@ public:
         ) 
     {}
 
+    ~Matrix() = default;
+
+    Matrix(const Matrix&) = default;
+    Matrix(Matrix&&) = default;
+
+    [[nodiscard]] Matrix& operator=(const Matrix& matrix) {
+        if (this != &matrix) [[likely]] {
+            check_matching_dimensions(matrix);
+            m_data = matrix.m_data;
+        }
+        return *this;
+    }
+
+    [[nodiscard]] Matrix& operator=(Matrix&& matrix) {
+        if (this != &matrix) [[likely]] {
+            check_matching_dimensions(matrix);
+            m_data = std::move(matrix.m_data);
+        }
+        return *this;
+    }
+
     [[nodiscard]] constexpr int rows() const noexcept;
     [[nodiscard]] constexpr int cols() const noexcept;
     [[nodiscard]] constexpr std::pair<int, int> shape() const noexcept;
