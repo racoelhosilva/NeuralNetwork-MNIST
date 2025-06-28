@@ -1,5 +1,4 @@
 #include "DataLoader.h"
-#include <cstdint>
 #include <fstream>
 
 static int32_t read_header_int(std::ifstream& file) {
@@ -23,8 +22,8 @@ namespace mnist {
         std::ifstream labels { label_path, std::ios::binary };
         if (!labels) { throw std::runtime_error("could not open MNIST labels file"); }
 
-        if (read_header_int(images) != 0x00000803 || 
-            read_header_int(labels) != 0x00000801) {
+        if (read_header_int(images) != mnist::IMAGE_MAGIC || 
+            read_header_int(labels) != mnist::LABEL_MAGIC) {
             throw std::runtime_error("unmatched MNIST header magic numbers");
         }
 
