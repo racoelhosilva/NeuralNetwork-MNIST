@@ -3,19 +3,10 @@
 
 int main() {
     Matrix m1 {3, 2, 1};
-    Matrix m2 {3, 2, 2};
+    Matrix m2 { m1.transpose() };
 
     std::cout << m1 << '\n';
     std::cout << m2 << '\n';
-
-    std::cout << m1 + m2 << '\n';
-    std::cout << m1 - m2 << '\n';
-
-    std::cout << 2.5 * m1 << '\n';
-    std::cout << m2 * 2.5 << '\n';
-
-    m1 = -m1;
-    std::cout << m1 << '\n';
 
     return 0;
 }

@@ -55,6 +55,8 @@ public:
 
     friend bool operator==(const Matrix& lhs, const Matrix& rhs);
     friend bool operator!=(const Matrix& lhs, const Matrix& rhs);
+
+    [[nodiscard]] Matrix transpose() const;
 private:
     const int m_rows;
     const int m_cols;

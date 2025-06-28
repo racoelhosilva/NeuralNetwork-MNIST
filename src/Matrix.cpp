@@ -64,6 +64,16 @@ Matrix Matrix::operator-() const {
     return !(lhs == rhs);
 }
 
+Matrix Matrix::transpose() const {
+    Matrix transposed { m_cols, m_rows };
+    for (int row { 0 }; row < m_rows; ++row) {
+        for (int col { 0 }; col < m_cols; ++col) {
+            transposed[col, row] = (*this)[row, col];
+        }
+    }
+    return transposed;
+}
+
 int Matrix::validate_dimension(int dim) {
     if (dim <= 0){
         throw std::invalid_argument(std::format(
