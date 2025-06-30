@@ -7,6 +7,7 @@ class NeuralNetwork {
 public:
     NeuralNetwork(int input, int hidden, int output);
 
+    void train(const Matrix& input, Matrix label, double learning_rate);
 private:
     int m_input;
     int m_hidden;

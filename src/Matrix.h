@@ -78,7 +78,9 @@ public:
     friend bool operator==(const Matrix& lhs, const Matrix& rhs);
     friend bool operator!=(const Matrix& lhs, const Matrix& rhs);
 
+    [[nodiscard]] Matrix flatten(bool col=true) const;
     [[nodiscard]] Matrix transpose() const;
+    [[nodiscard]] Matrix elem_mult(const Matrix& matrix) const;
     [[nodiscard]] Matrix mult(const Matrix& matrix) const;
     
     template <typename Function>
