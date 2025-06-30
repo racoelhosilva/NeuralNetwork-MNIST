@@ -17,7 +17,7 @@ NeuralNetwork::NeuralNetwork(int input, int hidden, int output)
     , b1(Matrix {hidden, 1, 0.0})
     , w2(Matrix::random(
         output, hidden, 
-        std::normal_distribution(0.0, std::sqrt(2.0 / hidden)),
+        std::normal_distribution(0.0, std::sqrt(2.0 / (hidden + output))),
         generator))
     , b2(Matrix {output, 1, 0.0})
     {}
@@ -34,7 +34,7 @@ void NeuralNetwork::train(const Matrix& input, Matrix label, double learning_rat
     /* Backward Propagation */
 
     Matrix dz2 = a2 - label;
-    Matrix dw2 = (dz2 * z1.transpose()); // for single input
+    Matrix dw2 = (dz2 * a1.transpose()); // for single input
     Matrix db2 = dz2; // for single input
     Matrix dz1 = (w2.transpose() * dz2)
         .elem_mult(z1.apply(activation::RelU_prime));
@@ -47,4 +47,12 @@ void NeuralNetwork::train(const Matrix& input, Matrix label, double learning_rat
     b1 -= learning_rate * db1;
     w2 -= learning_rate * dw2;
     b2 -= learning_rate * db2;
+}
+
+Matrix NeuralNetwork::predict(const Matrix& input) const {
+    Matrix z1 = w1 * input + b1;
+    Matrix a1 = z1.apply(activation::ReLU);
+    Matrix z2 = w2 * a1 + b2;
+    Matrix a2 = activation::softmax(z2);
+    return a2;
 }
