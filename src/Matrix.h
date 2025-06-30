@@ -2,6 +2,7 @@
 #define MATRIX_H
 
 #include <ostream>
+#include <random>
 #include <vector>
 
 class Matrix {
@@ -25,6 +26,17 @@ public:
         if (m_data.size() != static_cast<size_t>(rows) * static_cast<size_t>(cols)) {
             throw std::invalid_argument("unmatched row/col and data matrix size");
         }
+    }
+
+    template<typename Distribution>
+    static Matrix random(int rows, int cols, Distribution&& dist, std::mt19937& gen) {
+        std::vector<double> data(
+            static_cast<size_t>(rows) * static_cast<size_t>(cols)
+        );
+        for (auto& elem : data) {
+            elem = dist(gen);
+        }
+        return Matrix(rows, cols, std::move(data));
     }
 
     ~Matrix() = default;
