@@ -46,6 +46,17 @@ Matrix operator*(double scalar, Matrix matrix) {
     return matrix *= scalar;
 }
 
+Matrix& Matrix::operator/=(double scalar) noexcept {
+    for (auto& element : m_data) {
+        element /= scalar;
+    }
+    return *this;
+}
+
+Matrix operator/(Matrix matrix, double scalar) {
+    return matrix /= scalar;
+}
+
 Matrix Matrix::operator-() const {
     Matrix m { *this };
     for (auto& element : m.m_data) {

@@ -73,6 +73,7 @@ public:
     Matrix& operator+=(const Matrix& rhs);
     Matrix& operator-=(const Matrix& rhs);
     Matrix& operator*=(double scalar) noexcept;
+    Matrix& operator/=(double scalar);
     Matrix operator-() const;
 
     friend bool operator==(const Matrix& lhs, const Matrix& rhs);
@@ -145,6 +146,7 @@ inline Matrix Matrix::apply(Function&& f) const {
 [[nodiscard]] Matrix operator-(Matrix lhs, const Matrix& rhs);
 [[nodiscard]] Matrix operator*(Matrix matrix, double scalar);
 [[nodiscard]] Matrix operator*(double scalar, Matrix matrix);
+[[nodiscard]] Matrix operator/(Matrix matrix, double scalar);
 [[nodiscard]] Matrix operator*(const Matrix& lhs, const Matrix& rhs);
 
 std::ostream& operator<<(std::ostream& out, const Matrix& matrix);

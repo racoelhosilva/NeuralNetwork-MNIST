@@ -15,25 +15,28 @@ namespace activation {
     }
 
     [[nodiscard]] inline Matrix softmax(const Matrix& logits) {
-        const int R = logits.rows();
-        const int C = logits.cols();
-        Matrix out(R, C);
+        const int rows = logits.rows();
+        const int cols = logits.cols();
+        Matrix out { rows, cols };
 
-        for (int c = 0; c < C; ++c) {
-            double col_max = logits[0, c];
-            for (int r = 1; r < R; ++r)
-                col_max = std::max(col_max, logits[r, c]);
+        for (int col { 0 }; col < cols; ++col) {
+            double col_max = logits[0, col];
 
-            double sum_exp = 0.0;
-            for (int r = 0; r < R; ++r) {
-                double e = std::exp(logits[r, c] - col_max);
-                out[r, c] = e;
-                sum_exp += e;
+            for (int row { 1 }; row < rows; ++row) {
+                col_max = std::max(col_max, logits[row, col]);
             }
 
-            double inv_sum = 1.0 / sum_exp;
-            for (int r = 0; r < R; ++r)
-                out[r, c] *= inv_sum;
+            double sum_exp = 0.0;
+            for (int row { 1 }; row < rows; ++row) {
+                double exp = std::exp(logits[row, col] - col_max);
+                out[row, col] = exp;
+                sum_exp += exp;
+            }
+
+            double inverse_sum = 1 / sum_exp;
+            for (int row { 1 }; row < rows; ++row) {
+                out[row, col] *= inverse_sum;
+            }
         }
         return out;
     }
