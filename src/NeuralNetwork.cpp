@@ -22,7 +22,7 @@ NeuralNetwork::NeuralNetwork(int input, int hidden, int output)
     , b2(Matrix {output, 1, 0.0})
     {}
 
-void NeuralNetwork::train(const Matrix& input, const Matrix& label, double learning_rate) {
+void NeuralNetwork::train_step(const Matrix& input, const Matrix& label, double learning_rate) {
     
     /* Forward Propagation */
 

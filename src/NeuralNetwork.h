@@ -7,8 +7,8 @@ class NeuralNetwork {
 public:
     NeuralNetwork(int input, int hidden, int output);
 
-    void train(const Matrix& input, const Matrix& label, double learning_rate);
-    
+    void train_step(const Matrix& input, const Matrix& label, double learning_rate);
+
     [[nodiscard]] Matrix predict(const Matrix& input) const;
 private:
     const int m_input;

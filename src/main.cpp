@@ -55,7 +55,7 @@ int main() {
 
     for (int iter = 1; iter <= 100; ++iter) {
         for (const auto& r : train) {
-            model.train(r.input.flatten(), label_to_matrix(r.label), 0.01);
+            model.train_step(r.input.flatten(), label_to_matrix(r.label), 0.01);
         }
 
         std::cout << " > Iteration " << iter << "\n";
