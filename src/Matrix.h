@@ -2,6 +2,7 @@
 #define MATRIX_H
 
 #include <ostream>
+#include <random>
 #include <vector>
 
 class Matrix {
@@ -25,6 +26,17 @@ public:
         if (m_data.size() != static_cast<size_t>(rows) * static_cast<size_t>(cols)) {
             throw std::invalid_argument("unmatched row/col and data matrix size");
         }
+    }
+
+    template<typename Distribution>
+    static Matrix random(int rows, int cols, Distribution&& dist, std::mt19937& gen) {
+        std::vector<double> data(
+            static_cast<size_t>(rows) * static_cast<size_t>(cols)
+        );
+        for (auto& elem : data) {
+            elem = dist(gen);
+        }
+        return Matrix(rows, cols, std::move(data));
     }
 
     ~Matrix() = default;
@@ -61,12 +73,15 @@ public:
     Matrix& operator+=(const Matrix& rhs);
     Matrix& operator-=(const Matrix& rhs);
     Matrix& operator*=(double scalar) noexcept;
+    Matrix& operator/=(double scalar);
     Matrix operator-() const;
 
     friend bool operator==(const Matrix& lhs, const Matrix& rhs);
     friend bool operator!=(const Matrix& lhs, const Matrix& rhs);
 
+    [[nodiscard]] Matrix flatten(bool col=true) const;
     [[nodiscard]] Matrix transpose() const;
+    [[nodiscard]] Matrix elem_mult(const Matrix& matrix) const;
     [[nodiscard]] Matrix mult(const Matrix& matrix) const;
     
     template <typename Function>
@@ -131,6 +146,7 @@ inline Matrix Matrix::apply(Function&& f) const {
 [[nodiscard]] Matrix operator-(Matrix lhs, const Matrix& rhs);
 [[nodiscard]] Matrix operator*(Matrix matrix, double scalar);
 [[nodiscard]] Matrix operator*(double scalar, Matrix matrix);
+[[nodiscard]] Matrix operator/(Matrix matrix, double scalar);
 [[nodiscard]] Matrix operator*(const Matrix& lhs, const Matrix& rhs);
 
 std::ostream& operator<<(std::ostream& out, const Matrix& matrix);

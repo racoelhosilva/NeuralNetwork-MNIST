@@ -46,6 +46,17 @@ Matrix operator*(double scalar, Matrix matrix) {
     return matrix *= scalar;
 }
 
+Matrix& Matrix::operator/=(double scalar) noexcept {
+    for (auto& element : m_data) {
+        element /= scalar;
+    }
+    return *this;
+}
+
+Matrix operator/(Matrix matrix, double scalar) {
+    return matrix /= scalar;
+}
+
 Matrix Matrix::operator-() const {
     Matrix m { *this };
     for (auto& element : m.m_data) {
@@ -64,6 +75,15 @@ Matrix Matrix::operator-() const {
     return !(lhs == rhs);
 }
 
+Matrix Matrix::flatten(bool col) const {    
+    Matrix flattened { 
+        col ? m_rows * m_cols : 1, 
+        col ? 1 : m_rows * m_cols 
+    };
+    std::copy(m_data.begin(), m_data.end(), flattened.m_data.begin());
+    return flattened;
+}
+
 Matrix Matrix::transpose() const {
     Matrix transposed { m_cols, m_rows };
     for (int row { 0 }; row < m_rows; ++row) {
@@ -72,6 +92,17 @@ Matrix Matrix::transpose() const {
         }
     }
     return transposed;
+}
+
+Matrix Matrix::elem_mult(const Matrix& matrix) const {
+    check_matching_dimensions(matrix);
+    Matrix product { *this };
+    for (int row { 0 }; row < m_rows; ++row) {
+        for (int col { 0 }; col < m_cols; ++col) {
+            product[row, col] *= matrix[row, col];
+        }
+    }
+    return product;
 }
 
 Matrix Matrix::mult(const Matrix& matrix) const {
