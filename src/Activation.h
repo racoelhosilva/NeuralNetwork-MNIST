@@ -27,14 +27,14 @@ namespace activation {
             }
 
             double sum_exp = 0.0;
-            for (int row { 1 }; row < rows; ++row) {
+            for (int row { 0 }; row < rows; ++row) {
                 double exp = std::exp(logits[row, col] - col_max);
                 out[row, col] = exp;
                 sum_exp += exp;
             }
 
             double inverse_sum = 1 / sum_exp;
-            for (int row { 1 }; row < rows; ++row) {
+            for (int row { 0 }; row < rows; ++row) {
                 out[row, col] *= inverse_sum;
             }
         }

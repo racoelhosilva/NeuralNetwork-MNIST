@@ -4,7 +4,7 @@
 #include <iostream>
 #include <random>
 
-static std::mt19937 generator({std::random_device{}()});
+static std::mt19937 generator(std::random_device{}());
 
 NeuralNetwork::NeuralNetwork(int input, int hidden, int output)
     : m_input { input }
