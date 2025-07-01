@@ -2,18 +2,19 @@
 #define ACTIVATION_H
 
 #include "Matrix.h"
-#include <math.h>
+#include <algorithm>
+#include <cmath>
 
 namespace activation {
-    double ReLU(double val) {
+    [[nodiscard]] inline constexpr double ReLU(double val) {
         return val >= 0.0 ? val : 0.0;
     }
 
-    double RelU_prime(double val) {
-        return val >= 0.0 ? val : 0.0;
+    [[nodiscard]] inline constexpr double ReLU_prime(double val) {
+        return val >= 0.0 ? 1.0 : 0.0;
     }
 
-    Matrix softmax(const Matrix& logits) {
+    [[nodiscard]] inline Matrix softmax(const Matrix& logits) {
         const int R = logits.rows();
         const int C = logits.cols();
         Matrix out(R, C);

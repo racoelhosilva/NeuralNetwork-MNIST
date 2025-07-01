@@ -53,15 +53,13 @@ int main() {
 
     NeuralNetwork model { 784, 80, 10 };
 
-    for (int iter = 1; iter <= 25; ++iter) {
+    for (int iter = 1; iter <= 100; ++iter) {
         for (const auto& r : train) {
             model.train(r.input.flatten(), label_to_matrix(r.label), 0.01);
         }
 
-        if (iter % 5 == 0) {
-            std::cout << " > Iteration " << iter << "\n";
-            accuracy(model, test);
-        }
+        std::cout << " > Iteration " << iter << "\n";
+        accuracy(model, test);
     }
 
     return 0;

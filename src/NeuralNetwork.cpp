@@ -1,6 +1,6 @@
 #include "Activation.h"
 #include "NeuralNetwork.h"
-#include <math.h>
+#include <cmath>
 #include <iostream>
 #include <random>
 
@@ -16,13 +16,13 @@ NeuralNetwork::NeuralNetwork(int input, int hidden, int output)
         generator))
     , b1(Matrix {hidden, 1, 0.0})
     , w2(Matrix::random(
-        output, hidden, 
-        std::normal_distribution(0.0, std::sqrt(2.0 / (hidden + output))),
+        output, hidden,
+        std::uniform_real_distribution(-std::sqrt(6.0 / (hidden + output)), std::sqrt(6.0 / (hidden + output))),
         generator))
     , b2(Matrix {output, 1, 0.0})
     {}
 
-void NeuralNetwork::train(const Matrix& input, Matrix label, double learning_rate) {
+void NeuralNetwork::train(const Matrix& input, const Matrix& label, double learning_rate) {
     
     /* Forward Propagation */
 
@@ -37,7 +37,7 @@ void NeuralNetwork::train(const Matrix& input, Matrix label, double learning_rat
     Matrix dw2 = (dz2 * a1.transpose()); // for single input
     Matrix db2 = dz2; // for single input
     Matrix dz1 = (w2.transpose() * dz2)
-        .elem_mult(z1.apply(activation::RelU_prime));
+        .elem_mult(z1.apply(activation::ReLU_prime));
     Matrix dw1 = (dz1 * input.transpose()); // for single input
     Matrix db1 = dz1; // for single input
 
