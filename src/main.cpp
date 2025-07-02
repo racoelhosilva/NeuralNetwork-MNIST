@@ -35,7 +35,7 @@ int main() {
     std::string train_labels = "data/train-labels-idx1-ubyte";
 
     std::vector<mnist::Record> train = 
-        mnist::load(train_images, train_labels);
+        mnist::load(train_images, train_labels, 1000);
 
     std::cout << "Train Dataset size: " << train.size() << '\n';
 
@@ -45,7 +45,7 @@ int main() {
     std::string test_labels = "data/t10k-labels-idx1-ubyte";
 
     std::vector<mnist::Record> test = 
-        mnist::load(test_images, test_labels);
+        mnist::load(test_images, test_labels, 100);
 
     std::cout << "Test Dataset size: " << test.size() << '\n';
 
@@ -53,9 +53,9 @@ int main() {
 
     NeuralNetwork model { 784, 80, 10 };
 
-    for (int iter = 1; iter <= 100; ++iter) {
+    for (int iter = 1; iter <= 10; ++iter) {
         for (const auto& r : train) {
-            model.train_step(r.input, label_to_matrix(r.label), 0.01);
+            model.train_step(r.input.flatten(), label_to_matrix(r.label), 0.01);
         }
 
         std::cout << " > Iteration " << iter << "\n";
