@@ -2,8 +2,8 @@
 
 namespace initialization {
     Matrix init(int rows, int cols, initialization::Type type, std::mt19937& gen) {
-        const double fan_in  = cols;
-        const double fan_out = rows;
+        const double fan_in  = static_cast<double>(cols);
+        const double fan_out = static_cast<double>(rows);
         
         switch (type) {
             case Type::LeCun: {
@@ -38,9 +38,7 @@ namespace initialization {
     namespace detail {
         template <typename Distribution>
         Matrix random(int rows, int cols, Distribution&& dist, std::mt19937 &gen) {
-            std::vector<double> data(
-                static_cast<size_t>(rows) * static_cast<size_t>(cols)
-            );
+            std::vector<double> data(rows * cols);
 
             for (auto& elem : data) {
                 elem = dist(gen);
