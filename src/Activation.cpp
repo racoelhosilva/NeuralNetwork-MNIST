@@ -3,6 +3,28 @@
 #include <cmath>
 
 namespace activation {
+    Matrix apply(const Matrix& matrix, activation::Type type) {
+        switch (type) {
+            case Type::ReLU:
+                return matrix.apply(ReLU);
+            case Type::Softmax:
+                return softmax(matrix);
+            default:
+                throw std::invalid_argument("unknown activation type");
+        }
+    }
+
+    Matrix apply_prime(const Matrix& matrix, activation::Type type) {
+        switch (type) {
+            case Type::ReLU:
+                return matrix.apply(ReLU_prime);
+            case Type::Softmax:
+                throw std::logic_error("softmax derivative should be handled in loss calculation");
+            default:
+                throw std::invalid_argument("unknown activation type");
+        }
+    }
+
     double ReLU(double val) {
         return val >= 0.0 ? val : 0.0;
     }

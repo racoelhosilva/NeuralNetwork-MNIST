@@ -1,6 +1,4 @@
 #include "NeuralNetwork.h"
-#include "Activation.h"
-#include "Initialization.h"
 #include <cmath>
 #include <iostream>
 #include <random>
@@ -8,8 +6,8 @@
 static std::mt19937 generator(std::random_device{}());
 
 NeuralNetwork::NeuralNetwork(int input, int hidden, int output)
-    : l1(input, hidden, initialization::Type::He, generator)
-    , l2(hidden, output, initialization::Type::Glorot, generator)
+    : l1(input, hidden, activation::Type::ReLU, initialization::Type::He, generator)
+    , l2(hidden, output, activation::Type::Softmax, initialization::Type::Glorot, generator)
     {}
 
 void NeuralNetwork::train_step(const Matrix& input, const Matrix& label, double learning_rate) {
@@ -17,9 +15,9 @@ void NeuralNetwork::train_step(const Matrix& input, const Matrix& label, double 
     /* Forward Propagation */
 
     Matrix z1 = l1.w * input + l1.b;
-    Matrix a1 = z1.apply(activation::ReLU);
+    Matrix a1 = activation::apply(z1, l1.activation);
     Matrix z2 = l2.w * a1 + l2.b;
-    Matrix a2 = activation::softmax(z2);
+    Matrix a2 = activation::apply(z2, l2.activation);
 
     /* Backward Propagation */
 
@@ -27,7 +25,7 @@ void NeuralNetwork::train_step(const Matrix& input, const Matrix& label, double 
     Matrix dw2 = (dz2 * a1.transpose()); // for single input
     Matrix db2 = dz2; // for single input
     Matrix dz1 = (l2.w.transpose() * dz2)
-        .hadamard(z1.apply(activation::ReLU_prime));
+        .hadamard(activation::apply_prime(z1, l1.activation));
     Matrix dw1 = (dz1 * input.transpose()); // for single input
     Matrix db1 = dz1; // for single input
 
