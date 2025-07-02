@@ -1,4 +1,5 @@
 #include "Initialization.h"
+#include <stdexcept>
 
 namespace initialization {
     Matrix init(int rows, int cols, initialization::Type type, std::mt19937& gen) {
