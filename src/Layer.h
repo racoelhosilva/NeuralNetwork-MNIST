@@ -4,6 +4,7 @@
 #include "Activation.h"
 #include "Initialization.h"
 #include "Loss.h"
+#include "Regularization.h"
 #include <random>
 
 class Layer {
@@ -25,7 +26,9 @@ public:
     Matrix forward(const Matrix& a_prev);
     Matrix backward(const Matrix& gradient);
     Matrix loss(const Matrix& label, const Matrix& prediction, loss::Type loss);
-    void update(double learning_rate);
+    void update(double learning_rate, 
+        regularization::Type regularization, 
+        double lambda1, double lambda2);
     Matrix predict(const Matrix& a_prev) const;
 
     activation::Type activation;

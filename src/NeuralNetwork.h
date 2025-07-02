@@ -4,6 +4,7 @@
 #include "Layer.h"
 #include "Loss.h"
 #include "Matrix.h"
+#include "Regularization.h"
 #include <vector>
 
 class NeuralNetwork {
@@ -15,6 +16,9 @@ public:
     [[nodiscard]] Matrix predict(const Matrix& input) const;
 private:
     loss::Type loss = loss::Type::CrossEntropy;
+    regularization::Type regularization = regularization::Type::Elastic;
+    double lambda1 = 0.0001;
+    double lambda2 = 0.0001;
     std::vector<Layer> layers;
 };
 
