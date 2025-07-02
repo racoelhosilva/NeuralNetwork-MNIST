@@ -21,7 +21,7 @@ void NeuralNetwork::train_step(const Matrix& input, const Matrix& label, double 
 
     /* Backward Propagation */
 
-    Matrix dz2 = a2 - label;
+    Matrix dz2 = loss::gradient(label, a2, z2, loss, l2.activation);
     Matrix dw2 = (dz2 * a1.transpose()); // for single input
     Matrix db2 = dz2; // for single input
     Matrix dz1 = (l2.w.transpose() * dz2)
