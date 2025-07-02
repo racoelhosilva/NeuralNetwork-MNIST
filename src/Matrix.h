@@ -28,17 +28,6 @@ public:
         }
     }
 
-    template<typename Distribution>
-    static Matrix random(int rows, int cols, Distribution&& dist, std::mt19937& gen) {
-        std::vector<double> data(
-            static_cast<size_t>(rows) * static_cast<size_t>(cols)
-        );
-        for (auto& elem : data) {
-            elem = dist(gen);
-        }
-        return Matrix(rows, cols, std::move(data));
-    }
-
     ~Matrix() = default;
 
     Matrix(const Matrix&) = default;
@@ -81,8 +70,8 @@ public:
 
     [[nodiscard]] Matrix flatten(bool col=true) const;
     [[nodiscard]] Matrix transpose() const;
-    [[nodiscard]] Matrix elem_mult(const Matrix& matrix) const;
-    [[nodiscard]] Matrix mult(const Matrix& matrix) const;
+    [[nodiscard]] Matrix hadamard(const Matrix& matrix) const;
+    [[nodiscard]] Matrix matmul(const Matrix& matrix) const;
     
     template <typename Function>
     [[nodiscard]] Matrix apply(Function&& f) const;

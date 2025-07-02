@@ -46,7 +46,7 @@ Matrix operator*(double scalar, Matrix matrix) {
     return matrix *= scalar;
 }
 
-Matrix& Matrix::operator/=(double scalar) noexcept {
+Matrix& Matrix::operator/=(double scalar) {
     for (auto& element : m_data) {
         element /= scalar;
     }
@@ -94,7 +94,7 @@ Matrix Matrix::transpose() const {
     return transposed;
 }
 
-Matrix Matrix::elem_mult(const Matrix& matrix) const {
+Matrix Matrix::hadamard(const Matrix& matrix) const {
     check_matching_dimensions(matrix);
     Matrix product { *this };
     for (int row { 0 }; row < m_rows; ++row) {
@@ -105,7 +105,7 @@ Matrix Matrix::elem_mult(const Matrix& matrix) const {
     return product;
 }
 
-Matrix Matrix::mult(const Matrix& matrix) const {
+Matrix Matrix::matmul(const Matrix& matrix) const {
     check_mult_dimensions(matrix);
     Matrix product { rows(), matrix.cols(), 0.0 };
     for (int i { 0 }; i < m_rows; ++i) {
@@ -120,7 +120,7 @@ Matrix Matrix::mult(const Matrix& matrix) const {
 }
 
 Matrix operator*(const Matrix& lhs, const Matrix& rhs) {
-    return lhs.mult(rhs);
+    return lhs.matmul(rhs);
 }
 
 int Matrix::validate_dimension(int dim) {
