@@ -6,6 +6,8 @@ Matrix activation::apply(const Matrix& matrix, activation::Type type) {
     switch (type) {
         case Type::ReLU:
             return matrix.apply(ReLU);
+        case Type::Sigmoid:
+            return matrix.apply(sigmoid);
         case Type::Softmax:
             return softmax(matrix);
         default:
@@ -17,6 +19,8 @@ Matrix activation::apply_prime(const Matrix& matrix, activation::Type type) {
     switch (type) {
         case Type::ReLU:
             return matrix.apply(ReLU_prime);
+        case Type::Sigmoid:
+            return matrix.apply(sigmoid_prime);
         case Type::Softmax:
             throw std::logic_error("softmax derivative should be handled in loss calculation");
         default:
@@ -30,6 +34,15 @@ double activation::ReLU(double val) {
 
 double activation::ReLU_prime(double val) {
     return val >= 0.0 ? 1.0 : 0.0;
+}
+
+double activation::sigmoid(double val) {
+    return 1.0 / (1.0 + std::exp(-val));
+}
+
+double activation::sigmoid_prime(double val) {
+    const double sigmoid = 1.0 / (1.0 + std::exp(-val));
+    return sigmoid * (1.0 - sigmoid);
 }
 
 Matrix activation::softmax(const Matrix& logits) {

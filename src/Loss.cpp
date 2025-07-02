@@ -9,7 +9,8 @@ Matrix loss::gradient(const Matrix &label,
     ) {
     switch (type) {
         case Type::CrossEntropy:
-            if (activation == activation::Type::Softmax) {
+            if (activation == activation::Type::Softmax
+                || activation == activation::Type::Sigmoid) {
                 return prediction - label;
             }
             else {

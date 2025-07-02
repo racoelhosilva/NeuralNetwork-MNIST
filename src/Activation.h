@@ -7,6 +7,7 @@ namespace activation {
 
     enum class Type {
         ReLU,
+        Sigmoid,
         Softmax
     };
 
@@ -15,6 +16,8 @@ namespace activation {
 
     double ReLU(double val);
     double ReLU_prime(double val);
+    double sigmoid(double val);
+    double sigmoid_prime(double val);
     Matrix softmax(const Matrix& logits);
 }
 
