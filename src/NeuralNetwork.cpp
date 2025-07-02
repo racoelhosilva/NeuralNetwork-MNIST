@@ -1,6 +1,6 @@
 #include "NeuralNetwork.h"
+#include "Activation.h"
 #include "Initialization.h"
-#include "utils.h"
 #include <cmath>
 #include <iostream>
 #include <random>
