@@ -29,13 +29,17 @@ Matrix Layer::loss(const Matrix& label, const Matrix& prediction, loss::Type los
         activation
     );
     
-    dw = delta * cached_input.transpose(); // single input, no regularization
+    dw = delta * cached_input.transpose(); // single input
     db = delta; // single input
     
     return w.transpose() * delta;
 }
 
-void Layer::update(double learning_rate) {
-    w -= learning_rate * dw;
+void Layer::update(double learning_rate, 
+    regularization::Type regularization, 
+    double lambda1, double lambda2
+) {
+    const Matrix reg_term = regularization::term(w, regularization, lambda1, lambda2);
+    w -= learning_rate * (dw + reg_term);
     b -= learning_rate * db;
 }

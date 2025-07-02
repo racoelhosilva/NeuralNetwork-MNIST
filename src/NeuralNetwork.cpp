@@ -23,7 +23,7 @@ void NeuralNetwork::train_step(const Matrix& input, const Matrix& label, double 
     }
 
     for (auto& layer : layers) {
-        layer.update(learning_rate);
+        layer.update(learning_rate, regularization, lambda1, lambda2);
     }
 }
 
