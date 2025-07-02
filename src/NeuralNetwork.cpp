@@ -1,53 +1,36 @@
 #include "NeuralNetwork.h"
-#include "Initialization.h"
-#include "utils.h"
 #include <cmath>
 #include <iostream>
 #include <random>
 
 static std::mt19937 generator(std::random_device{}());
 
-NeuralNetwork::NeuralNetwork(int input, int hidden, int output)
-    : m_input { input }
-    , m_hidden { hidden }
-    , m_output { output }
-    , w1(initialization::init(hidden, input, initialization::Type::He, generator))
-    , b1(Matrix(hidden, 1, 0.0))
-    , w2(initialization::init(output, hidden, initialization::Type::Glorot, generator))
-    , b2(Matrix(output, 1, 0.0))
-    {}
+NeuralNetwork::NeuralNetwork(int input, int hidden, int output) {
+    layers.push_back({input, hidden, activation::Type::ReLU, initialization::Type::He, generator});
+    layers.push_back({hidden, hidden, activation::Type::ReLU, initialization::Type::He, generator});
+    layers.push_back({hidden, output, activation::Type::Softmax, initialization::Type::Glorot, generator});
+}
 
 void NeuralNetwork::train_step(const Matrix& input, const Matrix& label, double learning_rate) {
-    
-    /* Forward Propagation */
+    Matrix a = input;
+    for (auto& layer : layers) {
+        a = std::move(layer.forward(a));
+    }
 
-    Matrix z1 = w1 * input + b1;
-    Matrix a1 = z1.apply(activation::ReLU);
-    Matrix z2 = w2 * a1 + b2;
-    Matrix a2 = activation::softmax(z2);
+    Matrix dz = layers.back().loss(label, a, loss);
+    for (int i = layers.size() - 2; i >= 0; i--) {
+        dz = std::move(layers[i].backward(dz));
+    }
 
-    /* Backward Propagation */
-
-    Matrix dz2 = a2 - label;
-    Matrix dw2 = (dz2 * a1.transpose()); // for single input
-    Matrix db2 = dz2; // for single input
-    Matrix dz1 = (w2.transpose() * dz2)
-        .hadamard(z1.apply(activation::ReLU_prime));
-    Matrix dw1 = (dz1 * input.transpose()); // for single input
-    Matrix db1 = dz1; // for single input
-
-    /* Weights and Biases Update */
-
-    w1 -= learning_rate * dw1;
-    b1 -= learning_rate * db1;
-    w2 -= learning_rate * dw2;
-    b2 -= learning_rate * db2;
+    for (auto& layer : layers) {
+        layer.update(learning_rate);
+    }
 }
 
 Matrix NeuralNetwork::predict(const Matrix& input) const {
-    Matrix z1 = w1 * input + b1;
-    Matrix a1 = z1.apply(activation::ReLU);
-    Matrix z2 = w2 * a1 + b2;
-    Matrix a2 = activation::softmax(z2);
-    return a2;
+    Matrix a = input;
+    for (auto& layer : layers) {
+        a = layer.predict(a);
+    }
+    return a;
 }

@@ -51,11 +51,11 @@ int main() {
 
     /* Training and Testing Model */
 
-    NeuralNetwork model { 784, 80, 10 };
+    NeuralNetwork model { 784, 16, 10 };
 
-    for (int iter = 1; iter <= 100; ++iter) {
+    for (int iter = 1; iter <= 50; ++iter) {
         for (const auto& r : train) {
-            model.train_step(r.input, label_to_matrix(r.label), 0.01);
+            model.train_step(r.input.flatten(), label_to_matrix(r.label), 0.01);
         }
 
         std::cout << " > Iteration " << iter << "\n";
