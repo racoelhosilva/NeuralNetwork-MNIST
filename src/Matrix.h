@@ -43,7 +43,8 @@ public:
 
     Matrix& operator=(Matrix&& matrix) {
         if (this != &matrix) [[likely]] {
-            check_matching_dimensions(matrix);
+            m_rows = matrix.m_rows;
+            m_cols = matrix.m_cols;
             m_data = std::move(matrix.m_data);
         }
         return *this;
@@ -76,8 +77,8 @@ public:
     template <typename Function>
     [[nodiscard]] Matrix apply(Function&& f) const;
 private:
-    const int m_rows;
-    const int m_cols;
+    int m_rows;
+    int m_cols;
     std::vector<double> m_data;
 
     [[nodiscard]] static int validate_dimension(int dim);

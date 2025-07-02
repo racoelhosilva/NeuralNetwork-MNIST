@@ -5,42 +5,32 @@
 
 static std::mt19937 generator(std::random_device{}());
 
-NeuralNetwork::NeuralNetwork(int input, int hidden, int output)
-    : l1(input, hidden, activation::Type::ReLU, initialization::Type::He, generator)
-    , l2(hidden, output, activation::Type::Softmax, initialization::Type::Glorot, generator)
-    {}
+NeuralNetwork::NeuralNetwork(int input, int hidden, int output) {
+    layers.push_back({input, hidden, activation::Type::ReLU, initialization::Type::He, generator});
+    layers.push_back({hidden, hidden, activation::Type::ReLU, initialization::Type::He, generator});
+    layers.push_back({hidden, output, activation::Type::Softmax, initialization::Type::Glorot, generator});
+}
 
 void NeuralNetwork::train_step(const Matrix& input, const Matrix& label, double learning_rate) {
-    
-    /* Forward Propagation */
+    Matrix a = input;
+    for (auto& layer : layers) {
+        a = std::move(layer.forward(a));
+    }
 
-    Matrix z1 = l1.w * input + l1.b;
-    Matrix a1 = activation::apply(z1, l1.activation);
-    Matrix z2 = l2.w * a1 + l2.b;
-    Matrix a2 = activation::apply(z2, l2.activation);
+    Matrix dz = layers.back().loss(label, a, loss);
+    for (int i = layers.size() - 2; i >= 0; i--) {
+        dz = std::move(layers[i].backward(dz));
+    }
 
-    /* Backward Propagation */
-
-    Matrix dz2 = loss::gradient(label, a2, z2, loss, l2.activation);
-    Matrix dw2 = (dz2 * a1.transpose()); // for single input
-    Matrix db2 = dz2; // for single input
-    Matrix dz1 = (l2.w.transpose() * dz2)
-        .hadamard(activation::apply_prime(z1, l1.activation));
-    Matrix dw1 = (dz1 * input.transpose()); // for single input
-    Matrix db1 = dz1; // for single input
-
-    /* Weights and Biases Update */
-
-    l1.w -= learning_rate * dw1;
-    l1.b -= learning_rate * db1;
-    l2.w -= learning_rate * dw2;
-    l2.b -= learning_rate * db2;
+    for (auto& layer : layers) {
+        layer.update(learning_rate);
+    }
 }
 
 Matrix NeuralNetwork::predict(const Matrix& input) const {
-    Matrix z1 = l1.w * input + l1.b;
-    Matrix a1 = z1.apply(activation::ReLU);
-    Matrix z2 = l2.w * a1 + l2.b;
-    Matrix a2 = activation::softmax(z2);
-    return a2;
+    Matrix a = input;
+    for (auto& layer : layers) {
+        a = layer.predict(a);
+    }
+    return a;
 }
