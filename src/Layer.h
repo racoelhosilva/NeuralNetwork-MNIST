@@ -38,6 +38,9 @@ public:
     Matrix z;
     Matrix cached_input;
     Matrix dw, db;
+
+private:
+    Matrix broadcast_col_add(const Matrix& matrix, const Matrix& column) const;
 };
 
 #endif

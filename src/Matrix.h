@@ -35,7 +35,8 @@ public:
 
     Matrix& operator=(const Matrix& matrix) {
         if (this != &matrix) [[likely]] {
-            check_matching_dimensions(matrix);
+            m_rows = matrix.m_rows;
+            m_cols = matrix.m_cols;
             m_data = matrix.m_data;
         }
         return *this;
@@ -79,6 +80,8 @@ public:
     [[nodiscard]] Matrix transpose() const;
     [[nodiscard]] Matrix hadamard(const Matrix& matrix) const;
     [[nodiscard]] Matrix matmul(const Matrix& matrix) const;
+
+    [[nodiscard]] Matrix row_avg() const;
     
     template <typename Function>
     [[nodiscard]] Matrix apply(Function&& f) const;
@@ -89,9 +92,9 @@ private:
 
     [[nodiscard]] static int validate_dimension(int dim);
     [[nodiscard]] int validate_row(int row) const;
-    [[nodiscard]] void validate_row_range(int start, int end) const;
     [[nodiscard]] int validate_col(int col) const;
-    [[nodiscard]] void validate_col_range(int start, int end) const;
+    void validate_row_range(int start, int end) const;
+    void validate_col_range(int start, int end) const;
     void check_matching_dimensions(const Matrix& other) const;
     void check_mult_dimensions(const Matrix& other) const;
     [[nodiscard]] constexpr std::size_t index(int row, int col) const noexcept;

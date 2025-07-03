@@ -171,6 +171,16 @@ Matrix Matrix::matmul(const Matrix& matrix) const {
     return product;
 }
 
+Matrix Matrix::row_avg() const {
+    Matrix column {m_rows, 1, 0.0};
+    for (int row { 0 }; row < m_rows; ++row) {
+        for (int col { 0 }; col < m_cols; ++col) {
+            column[row, 0] += (*this)[row, col];
+        }
+    }
+    return column / m_cols;
+}
+
 Matrix operator*(const Matrix& lhs, const Matrix& rhs) {
     return lhs.matmul(rhs);
 }
