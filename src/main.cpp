@@ -64,9 +64,7 @@ int main() {
     //     accuracy(model, test_X, test_y);
     // }
 
-    model.fit(train_X, train_y, 50, 0.01, 10);
-
-    accuracy(model, test_X, test_y);
+    model.fit(train_X, train_y, 50, 0.01, 10, test_X, test_y);
 
     return 0;
 }
