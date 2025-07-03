@@ -3,6 +3,14 @@
 #include <iomanip>
 #include <stdexcept>
 
+Matrix Matrix::col(int index) const {
+    Matrix col {m_rows, 1};
+    for (int row { 0 }; row < m_rows; ++row) {
+        col[row, 0] = (*this)[row, index];
+    }
+    return col;
+}
+
 void Matrix::fill(double value) noexcept {
     std::fill(m_data.begin(), m_data.end(), value);
 }

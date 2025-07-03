@@ -54,6 +54,8 @@ public:
     [[nodiscard]] constexpr int cols() const noexcept;
     [[nodiscard]] constexpr std::pair<int, int> shape() const noexcept;
 
+    Matrix col(int index) const;
+
     [[nodiscard]] double& operator[](int row, int col) noexcept;
     [[nodiscard]] const double& operator[](int row, int col) const noexcept;
     [[nodiscard]] double& at(int row, int col);

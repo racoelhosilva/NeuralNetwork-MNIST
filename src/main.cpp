@@ -2,6 +2,26 @@
 #include "NeuralNetwork.h"
 #include <iostream>
 
+int argmax(const Matrix& m) {
+    int res = 0;
+    for (int i { 1 }; i < 10; ++i) {
+        if (m.at(i,0) > m.at(res,0)) {
+            res = i;
+        }
+    }
+    return res;
+}
+
+void accuracy(const NeuralNetwork& model, const Matrix& input, const Matrix& label) {
+    double correct = 0;
+    for (int idx { 0 }; idx < input.cols(); ++idx) {
+        if (argmax(model.predict(input.col(idx))) == argmax(label.col(idx))) {
+            correct += 1;
+        }
+    }
+    std::cout << "Correct " << correct << " Accuracy " << (100.0 * correct) / input.cols() << '\n';
+}
+
 int main() {
     /* Training */
 
@@ -34,6 +54,15 @@ int main() {
     /* Training and Testing Model */
 
     NeuralNetwork model { 784, 16, 10 };
+
+    for (int iter = 1; iter <= 50; ++iter) {
+        for (int idx { 0 }; idx < train_X.cols(); ++idx) {
+            model.train_step(train_X.col(idx), train_y.col(idx), 0.01);
+        }
+
+        std::cout << " > Iteration " << iter << "\n";
+        accuracy(model, test_X, test_y);
+    }
 
     return 0;
 }
