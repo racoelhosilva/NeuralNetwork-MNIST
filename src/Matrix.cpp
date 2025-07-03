@@ -3,12 +3,56 @@
 #include <iomanip>
 #include <stdexcept>
 
+Matrix Matrix::row(int index) const {
+    index = validate_row(index);
+    Matrix row {1, m_cols};
+    for (int col { 0 }; col < m_cols; ++col) {
+        row[0, col] = (*this)[index, col];
+    }
+    return row;
+}
+
+Matrix Matrix::rows(int start, int end) const {
+    validate_row_range(start, end);
+    Matrix slice {end - start, m_cols};
+    for (int row { start }; row < end; ++row) {
+        for (int col { 0 }; col < m_cols; ++col) {
+            slice[row - start, col] = (*this)[row, col];
+        }
+    }
+    return slice;
+}
+
 Matrix Matrix::col(int index) const {
+    index = validate_col(index);
     Matrix col {m_rows, 1};
     for (int row { 0 }; row < m_rows; ++row) {
         col[row, 0] = (*this)[row, index];
     }
     return col;
+}
+
+Matrix Matrix::cols(int start, int end) const {
+    validate_col_range(start, end);
+    Matrix slice {m_rows, end - start};
+    for (int row { 0 }; row < m_rows; ++row) {
+        for (int col { start }; col < end; ++col) {
+            slice[row, col - start] = (*this)[row, col];
+        }
+    }
+    return slice;
+}
+
+Matrix Matrix::slice(int row_start, int row_end, int col_start, int col_end) const {
+    validate_row_range(row_start, row_end);
+    validate_col_range(col_start, col_end);
+    Matrix slice {row_end - row_start, col_end - col_start};
+    for (int row { row_start }; row < row_end; ++row) {
+        for (int col { col_start }; col < col_end; ++col) {
+            slice[row - row_start, col - col_start] = (*this)[row, col];
+        }
+    }
+    return slice;
 }
 
 void Matrix::fill(double value) noexcept {
@@ -151,6 +195,21 @@ int Matrix::validate_row(int row) const {
     return row;
 }
 
+void Matrix::validate_row_range(int start, int end) const {
+    if (start >= end) {
+        throw std::invalid_argument(std::format(
+            "invalid range specification [{},{}]",
+            start, end
+        ));
+    }
+    if (start < 0 || end > m_rows) {
+        throw std::out_of_range(std::format(
+            "row range [{},{}] is out of bounds [0, {}]",
+            start, end, m_rows - 1
+        ));
+    }
+}
+
 int Matrix::validate_col(int col) const {
     if (col < 0 || col >= m_cols) {
         throw std::out_of_range(std::format(
@@ -159,6 +218,21 @@ int Matrix::validate_col(int col) const {
         ));
     }
     return col;
+}
+
+void Matrix::validate_col_range(int start, int end) const {
+    if (start >= end) {
+        throw std::invalid_argument(std::format(
+            "invalid range specification [{},{}]",
+            start, end
+        ));
+    }
+    if (start < 0 || end > m_cols) {
+        throw std::out_of_range(std::format(
+            "col range [{},{}] is out of bounds [0, {}]",
+            start, end, m_cols - 1
+        ));
+    }
 }
 
 void Matrix::check_matching_dimensions(const Matrix& other) const {

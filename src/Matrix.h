@@ -54,7 +54,11 @@ public:
     [[nodiscard]] constexpr int cols() const noexcept;
     [[nodiscard]] constexpr std::pair<int, int> shape() const noexcept;
 
-    Matrix col(int index) const;
+    [[nodiscard]] Matrix row(int index) const;
+    [[nodiscard]] Matrix rows(int start, int end) const;
+    [[nodiscard]] Matrix col(int index) const;
+    [[nodiscard]] Matrix cols(int start, int end) const;
+    [[nodiscard]] Matrix slice(int row_start, int row_end, int col_start, int col_end) const;
 
     [[nodiscard]] double& operator[](int row, int col) noexcept;
     [[nodiscard]] const double& operator[](int row, int col) const noexcept;
@@ -85,7 +89,9 @@ private:
 
     [[nodiscard]] static int validate_dimension(int dim);
     [[nodiscard]] int validate_row(int row) const;
+    [[nodiscard]] void validate_row_range(int start, int end) const;
     [[nodiscard]] int validate_col(int col) const;
+    [[nodiscard]] void validate_col_range(int start, int end) const;
     void check_matching_dimensions(const Matrix& other) const;
     void check_mult_dimensions(const Matrix& other) const;
     [[nodiscard]] constexpr std::size_t index(int row, int col) const noexcept;
