@@ -29,7 +29,7 @@ int main() {
     std::string train_labels = "data/train-labels-idx1-ubyte";
 
     auto[train_X, train_y] = 
-        mnist::load(train_images, train_labels);
+        mnist::load(train_images, train_labels, 1000);
 
     std::cout << "Train Dataset: " 
         << train_X.rows() << " x " << train_X.cols() 
@@ -43,7 +43,7 @@ int main() {
     std::string test_labels = "data/t10k-labels-idx1-ubyte";
 
     auto[test_X, test_y] = 
-        mnist::load(test_images, test_labels);
+        mnist::load(test_images, test_labels, 100);
 
     std::cout << "Test Dataset: " 
         << test_X.rows() << " x " << test_X.cols() 
@@ -55,14 +55,18 @@ int main() {
 
     NeuralNetwork model { 784, 16, 10 };
 
-    for (int iter = 1; iter <= 50; ++iter) {
-        for (int idx { 0 }; idx < train_X.cols(); ++idx) {
-            model.train_step(train_X.col(idx), train_y.col(idx), 0.01);
-        }
+    // for (int iter = 1; iter <= 50; ++iter) {
+    //     for (int idx { 0 }; idx < train_X.cols(); ++idx) {
+    //         model.train(train_X.col(idx), train_y.col(idx), 0.01);
+    //     }
 
-        std::cout << " > Iteration " << iter << "\n";
-        accuracy(model, test_X, test_y);
-    }
+    //     std::cout << " > Iteration " << iter << "\n";
+    //     accuracy(model, test_X, test_y);
+    // }
+
+    model.fit(train_X, train_y, 50, 0.01, 10);
+
+    accuracy(model, test_X, test_y);
 
     return 0;
 }

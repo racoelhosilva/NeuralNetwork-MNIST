@@ -11,7 +11,9 @@ class NeuralNetwork {
 public:
     NeuralNetwork(int input, int hidden, int output);
 
-    void train_step(const Matrix& input, const Matrix& label, double learning_rate);
+    void train(const Matrix& input, const Matrix& label, double learning_rate);
+
+    void fit(const Matrix& input, const Matrix& label, int epochs, double learning_rate, int batch_size=1);
 
     [[nodiscard]] Matrix predict(const Matrix& input) const;
 private:
