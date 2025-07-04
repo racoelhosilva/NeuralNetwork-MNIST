@@ -1,32 +1,7 @@
+#include "Config.h"
 #include "DataLoader.h"
 #include "NeuralNetwork.h"
 #include <iostream>
-
-Matrix label_to_matrix(int label) {
-    Matrix res(10, 1, 0.0);
-    res.at(label, 0) = 1.0;
-    return res;
-}
-
-int matrix_to_label(const Matrix& matrix) {
-    int res = 0;
-    for (int i { 1 }; i < 10; ++i) {
-        if (matrix.at(i,0) > matrix.at(res,0)) {
-            res = i;
-        }
-    }
-    return res;
-}
-
-void accuracy(const NeuralNetwork& model, const std::vector<mnist::Record>& records) {
-    double correct = 0;
-    for (const auto& r : records) {
-        if (matrix_to_label(model.predict(r.input.flatten())) == r.label) {
-            correct += 1;
-        }
-    }
-    std::cout << "Correct " << correct << " Accuracy " << (100.0 * correct) / records.size() << '\n';
-}
 
 int main() {
     /* Training */
@@ -34,33 +9,58 @@ int main() {
     std::string train_images = "data/train-images-idx3-ubyte"; 
     std::string train_labels = "data/train-labels-idx1-ubyte";
 
-    std::vector<mnist::Record> train = 
-        mnist::load(train_images, train_labels);
+    auto[train_X, train_y] = 
+        mnist::load(train_images, train_labels, 1000);
 
-    std::cout << "Train Dataset size: " << train.size() << '\n';
-
+    std::cout << "Train Dataset: " 
+        << train_X.rows() << " x " << train_X.cols() 
+        << " | "
+        << train_y.rows() << " x " << train_y.cols()
+        << '\n';
+    
     /* Testing */
 
     std::string test_images = "data/t10k-images-idx3-ubyte"; 
     std::string test_labels = "data/t10k-labels-idx1-ubyte";
 
-    std::vector<mnist::Record> test = 
-        mnist::load(test_images, test_labels);
+    auto[test_X, test_y] = 
+        mnist::load(test_images, test_labels, 100);
 
-    std::cout << "Test Dataset size: " << test.size() << '\n';
+    std::cout << "Test Dataset: " 
+        << test_X.rows() << " x " << test_X.cols() 
+        << " | "
+        << test_y.rows() << " x " << test_y.cols()
+        << '\n';
 
     /* Training and Testing Model */
 
-    NeuralNetwork model { 784, 16, 10 };
+    config::Network network_config;
+    network_config.input_size = 784;
+    network_config.layers = {
+        {250, activation::Type::ReLU, initialization::Type::He},
+        {50, activation::Type::Sigmoid, initialization::Type::Glorot},
+        {10, activation::Type::Softmax, initialization::Type::Glorot},
+    };
+    network_config.loss_type = loss::Type::CrossEntropy;
+    network_config.regularization_type = regularization::Type::L2;
+    network_config.lambda1 = 0.0001;
+    network_config.lambda2 = 0.0001; 
 
-    for (int iter = 1; iter <= 50; ++iter) {
-        for (const auto& r : train) {
-            model.train_step(r.input.flatten(), label_to_matrix(r.label), 0.01);
-        }
+    NeuralNetwork model { network_config };
 
-        std::cout << " > Iteration " << iter << "\n";
-        accuracy(model, test);
-    }
+    config::Training training_config;
+    training_config.epochs = 100;
+    training_config.batch_size = 1;
+    training_config.learning_rate_type = learning_rate::Type::TimeBased;
+    training_config.learning_rate = 0.01;
+    training_config.k = 0.1;
+
+    config::Validation validation {
+        test_X, 
+        test_y
+    };
+
+    model.fit(train_X, train_y, training_config, validation);
 
     return 0;
 }
