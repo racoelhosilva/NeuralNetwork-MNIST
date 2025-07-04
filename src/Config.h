@@ -3,6 +3,7 @@
 
 #include "Activation.h"
 #include "Initialization.h"
+#include "LearningRate.h"
 #include "Loss.h"
 #include "Matrix.h"
 #include "Regularization.h"
@@ -27,8 +28,10 @@ namespace config {
 
     struct Training {
         int epochs;
-        double learning_rate;
         int batch_size;
+        learning_rate::Type learning_rate_type;
+        double learning_rate;
+        double k;
     };
 
     struct Validation {
