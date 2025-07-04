@@ -1,6 +1,8 @@
 #include "NeuralNetwork.h"
 #include <cmath>
 #include <iostream>
+#include <limits>
+#include <memory>
 #include <random>
 
 static std::mt19937 generator(std::random_device{}());
@@ -41,32 +43,46 @@ void NeuralNetwork::fit(
     ) {
     const int num_samples = input.cols();
 
+    std::unique_ptr<NeuralNetwork> best_model;
+    double best_accuracy = -std::numeric_limits<double>::infinity();
+    int patience = 0;
+
     for (int epoch { 0 }; epoch < config.epochs; ++epoch) {
         
-        std::cout << "Epoch " << epoch << '\n';
-        if (validation.has_value()) {
-            std::cout << "Accuracy: " 
-            << evaluate(validation.value().X, validation.value().y) * 100.0 
-            << '\n';
-        }
+        std::cout << "Epoch " << epoch+1 << " / " << config.epochs << '\n';
     
+        const double learning_rate = learning_rate::current(
+            config.learning_rate, 
+            config.learning_rate_type, 
+            epoch, 
+            config.k
+        );
+
         for (int start { 0 }; start < num_samples; start += config.batch_size) {
             int end = std::min(start + config.batch_size, num_samples);
 
             Matrix batch_inputs = input.cols(start, end);
             Matrix batch_labels = label.cols(start, end);
         
-            train(
-                batch_inputs, 
-                batch_labels, 
-                learning_rate::current(
-                    config.learning_rate, 
-                    config.learning_rate_type, 
-                    epoch, 
-                    config.k
-                )
-            );
+            train(batch_inputs, batch_labels, learning_rate);
+        }
 
+        if (validation.has_value()) {
+            double accuracy = evaluate(validation.value().X, validation.value().y);
+            
+            std::cout << "Accuracy: " 
+                << accuracy * 100.0 
+                << '\n';
+            
+            if (!best_model || accuracy > best_accuracy) {
+                best_model = std::make_unique<NeuralNetwork>(*this);
+                best_accuracy = accuracy;
+                patience = 0;
+            } else if (++patience >= validation.value().patience) {
+                std::cout << "Early stop triggered" << '\n';
+                *this = *best_model;
+                break;
+            }
         }
     }
 

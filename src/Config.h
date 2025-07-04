@@ -37,6 +37,7 @@ namespace config {
     struct Validation {
         const Matrix& X;
         const Matrix& y;
+        int patience;
     };
 }
 
