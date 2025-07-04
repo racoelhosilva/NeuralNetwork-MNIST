@@ -57,7 +57,8 @@ int main() {
 
     config::Validation validation {
         test_X, 
-        test_y
+        test_y,
+        10
     };
 
     model.fit(train_X, train_y, training_config, validation);
