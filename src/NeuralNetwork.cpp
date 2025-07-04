@@ -44,7 +44,7 @@ void NeuralNetwork::fit(
     const int num_samples = input.cols();
 
     std::unique_ptr<NeuralNetwork> best_model;
-    double best_accuracy = -std::numeric_limits<double>::infinity();
+    double best_accuracy = std::numeric_limits<double>::lowest();
     int patience = 0;
 
     for (int epoch { 0 }; epoch < config.epochs; ++epoch) {
