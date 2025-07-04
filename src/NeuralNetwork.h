@@ -1,6 +1,7 @@
 #ifndef NEURAL_NETWORK_H
 #define NEURAL_NETWORK_H
 
+#include "Config.h"
 #include "Layer.h"
 #include "Loss.h"
 #include "Matrix.h"
@@ -9,7 +10,7 @@
 
 class NeuralNetwork {
 public:
-    NeuralNetwork(int input, int hidden, int output);
+    NeuralNetwork(const config::Network& config);
 
     void train(const Matrix& input, const Matrix& label, double learning_rate);
 
@@ -19,10 +20,10 @@ public:
 
     [[nodiscard]] Matrix predict(const Matrix& input) const;
 private:
-    loss::Type loss = loss::Type::CrossEntropy;
-    regularization::Type regularization = regularization::Type::Elastic;
-    double lambda1 = 0.0001;
-    double lambda2 = 0.0001;
+    loss::Type loss;
+    regularization::Type regularization;
+    double lambda1;
+    double lambda2;
     std::vector<Layer> layers;
 };
 

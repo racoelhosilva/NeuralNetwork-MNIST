@@ -1,26 +1,7 @@
+#include "Config.h"
 #include "DataLoader.h"
 #include "NeuralNetwork.h"
 #include <iostream>
-
-int argmax(const Matrix& m) {
-    int res = 0;
-    for (int i { 1 }; i < 10; ++i) {
-        if (m.at(i,0) > m.at(res,0)) {
-            res = i;
-        }
-    }
-    return res;
-}
-
-void accuracy(const NeuralNetwork& model, const Matrix& input, const Matrix& label) {
-    double correct = 0;
-    for (int idx { 0 }; idx < input.cols(); ++idx) {
-        if (argmax(model.predict(input.col(idx))) == argmax(label.col(idx))) {
-            correct += 1;
-        }
-    }
-    std::cout << "Correct " << correct << " Accuracy " << (100.0 * correct) / input.cols() << '\n';
-}
 
 int main() {
     /* Training */
@@ -53,16 +34,19 @@ int main() {
 
     /* Training and Testing Model */
 
-    NeuralNetwork model { 784, 16, 10 };
+    config::Network network_config;
+    network_config.input_size = 784;
+    network_config.layers = {
+        {80, activation::Type::ReLU, initialization::Type::He},
+        {20, activation::Type::Sigmoid, initialization::Type::Glorot},
+        {10, activation::Type::Softmax, initialization::Type::Glorot},
+    };
+    network_config.loss_type = loss::Type::CrossEntropy;
+    network_config.regularization_type = regularization::Type::L2;
+    network_config.lambda1 = 0.0001;
+    network_config.lambda2 = 0.0001; 
 
-    // for (int iter = 1; iter <= 50; ++iter) {
-    //     for (int idx { 0 }; idx < train_X.cols(); ++idx) {
-    //         model.train(train_X.col(idx), train_y.col(idx), 0.01);
-    //     }
-
-    //     std::cout << " > Iteration " << iter << "\n";
-    //     accuracy(model, test_X, test_y);
-    // }
+    NeuralNetwork model { network_config };
 
     model.fit(train_X, train_y, 50, 0.01, 10, test_X, test_y);
 

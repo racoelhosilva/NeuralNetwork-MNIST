@@ -5,10 +5,16 @@
 
 static std::mt19937 generator(std::random_device{}());
 
-NeuralNetwork::NeuralNetwork(int input, int hidden, int output) {
-    layers.push_back({input, hidden, activation::Type::ReLU, initialization::Type::He, generator});
-    layers.push_back({hidden, hidden, activation::Type::ReLU, initialization::Type::He, generator});
-    layers.push_back({hidden, output, activation::Type::Softmax, initialization::Type::Glorot, generator});
+NeuralNetwork::NeuralNetwork(const config::Network& config) {
+    int input = config.input_size;
+    for (const auto& l : config.layers) {
+        layers.push_back({input, l.units, l.activation_type, l.initialization_type, generator});
+        input = l.units;
+    }
+    loss = config.loss_type;
+    regularization = config.regularization_type;
+    lambda1 = config.lambda1;
+    lambda2 = config.lambda2;
 }
 
 void NeuralNetwork::train(const Matrix& input, const Matrix& label, double learning_rate) {
