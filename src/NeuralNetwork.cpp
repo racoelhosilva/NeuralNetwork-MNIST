@@ -1,4 +1,5 @@
 #include "NeuralNetwork.h"
+#include <algorithm>
 #include <cmath>
 #include <iostream>
 #include <limits>
@@ -47,10 +48,17 @@ void NeuralNetwork::fit(
     double best_accuracy = std::numeric_limits<double>::lowest();
     int patience = 0;
 
+    std::vector<int> order(num_samples);
+    std::iota(order.begin(), order.end(), 0);
+
     for (int epoch { 0 }; epoch < config.epochs; ++epoch) {
         
         std::cout << "Epoch " << epoch+1 << " / " << config.epochs << '\n';
     
+        if (config.shuffle) {
+            std::shuffle(order.begin(), order.end(), generator);
+        }
+
         const double learning_rate = learning_rate::current(
             config.learning_rate, 
             config.learning_rate_type, 
@@ -61,9 +69,9 @@ void NeuralNetwork::fit(
         for (int start { 0 }; start < num_samples; start += config.batch_size) {
             int end = std::min(start + config.batch_size, num_samples);
 
-            Matrix batch_inputs = input.cols(start, end);
-            Matrix batch_labels = label.cols(start, end);
-        
+            Matrix batch_inputs = NeuralNetwork::random_cols(input, order, start, end);
+            Matrix batch_labels = NeuralNetwork::random_cols(label, order, start, end);
+
             train(batch_inputs, batch_labels, learning_rate);
         }
 
@@ -78,7 +86,8 @@ void NeuralNetwork::fit(
                 best_model = std::make_unique<NeuralNetwork>(*this);
                 best_accuracy = accuracy;
                 patience = 0;
-            } else if (++patience >= validation.value().patience) {
+            } else if (validation.value().patience 
+                && ++patience >= validation.value().patience) {
                 std::cout << "Early stop triggered" << '\n';
                 *this = *best_model;
                 break;
@@ -122,3 +131,17 @@ Matrix NeuralNetwork::predict(const Matrix& input) const {
     }
     return a;
 }
+
+Matrix NeuralNetwork::random_cols(const Matrix& data, const std::vector<int>& idx, int start, int end) {
+    int rows = data.rows();
+    int cols = end - start;
+    Matrix out(rows, cols);
+
+    for (int j { 0 }; j < cols; ++j) {
+        int src_col = idx[start + j];
+        for (int r { 0 }; r < rows; ++r)
+            out[r, j] = data[r, src_col];
+    }
+    return out;
+}
+

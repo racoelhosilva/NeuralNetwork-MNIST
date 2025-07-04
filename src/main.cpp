@@ -38,7 +38,7 @@ int main() {
     network_config.input_size = 784;
     network_config.layers = {
         {250, activation::Type::ReLU, initialization::Type::He},
-        {50, activation::Type::Sigmoid, initialization::Type::Glorot},
+        {80, activation::Type::Sigmoid, initialization::Type::Glorot},
         {10, activation::Type::Softmax, initialization::Type::Glorot},
     };
     network_config.loss_type = loss::Type::CrossEntropy;
@@ -53,13 +53,11 @@ int main() {
     training_config.batch_size = 1;
     training_config.learning_rate_type = learning_rate::Type::TimeBased;
     training_config.learning_rate = 0.01;
-    training_config.k = 0.1;
+    training_config.k = 0.05;
+    training_config.shuffle = true;
 
-    config::Validation validation {
-        test_X, 
-        test_y,
-        10
-    };
+    config::Validation validation { test_X, test_y };
+    validation.patience = 20;
 
     model.fit(train_X, train_y, training_config, validation);
 

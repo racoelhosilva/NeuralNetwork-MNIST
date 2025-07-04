@@ -39,6 +39,8 @@ private:
     double lambda1;
     double lambda2;
     std::vector<Layer> layers;
+
+    static Matrix random_cols(const Matrix& data, const std::vector<int>& idx, int start, int end);
 };
 
 #endif
