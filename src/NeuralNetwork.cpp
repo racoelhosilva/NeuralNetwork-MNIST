@@ -56,7 +56,17 @@ void NeuralNetwork::fit(
             Matrix batch_inputs = input.cols(start, end);
             Matrix batch_labels = label.cols(start, end);
         
-            train(batch_inputs, batch_labels, config.learning_rate);
+            train(
+                batch_inputs, 
+                batch_labels, 
+                learning_rate::current(
+                    config.learning_rate, 
+                    config.learning_rate_type, 
+                    epoch, 
+                    config.k
+                )
+            );
+
         }
     }
 
