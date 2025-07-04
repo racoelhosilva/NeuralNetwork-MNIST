@@ -10,7 +10,7 @@ int main() {
     std::string train_labels = "data/train-labels-idx1-ubyte";
 
     auto[train_X, train_y] = 
-        mnist::load(train_images, train_labels, 1000);
+        mnist::load(train_images, train_labels);
 
     std::cout << "Train Dataset: " 
         << train_X.rows() << " x " << train_X.cols() 
@@ -24,7 +24,7 @@ int main() {
     std::string test_labels = "data/t10k-labels-idx1-ubyte";
 
     auto[test_X, test_y] = 
-        mnist::load(test_images, test_labels, 100);
+        mnist::load(test_images, test_labels);
 
     std::cout << "Test Dataset: " 
         << test_X.rows() << " x " << test_X.cols() 
@@ -38,7 +38,7 @@ int main() {
     network_config.input_size = 784;
     network_config.layers = {
         {80, activation::Type::ReLU, initialization::Type::He},
-        {20, activation::Type::Sigmoid, initialization::Type::Glorot},
+        {80, activation::Type::Sigmoid, initialization::Type::Glorot},
         {10, activation::Type::Softmax, initialization::Type::Glorot},
     };
     network_config.loss_type = loss::Type::CrossEntropy;
@@ -48,7 +48,17 @@ int main() {
 
     NeuralNetwork model { network_config };
 
-    model.fit(train_X, train_y, 50, 0.01, 10, test_X, test_y);
+    config::Training training_config;
+    training_config.epochs = 50;
+    training_config.learning_rate = 0.01;
+    training_config.batch_size = 16;
+
+    config::Validation validation {
+        test_X, 
+        test_y
+    };
+
+    model.fit(train_X, train_y, training_config, validation);
 
     return 0;
 }

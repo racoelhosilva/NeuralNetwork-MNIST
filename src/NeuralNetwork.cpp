@@ -33,29 +33,38 @@ void NeuralNetwork::train(const Matrix& input, const Matrix& label, double learn
     }
 }
 
-void NeuralNetwork::fit(const Matrix& input, const Matrix& label, int epochs, double learning_rate, int batch_size, const Matrix& val_input, const Matrix& val_label) {
+void NeuralNetwork::fit(
+        const Matrix& input, 
+        const Matrix& label, 
+        const config::Training& config, 
+        std::optional<config::Validation> validation
+    ) {
     const int num_samples = input.cols();
 
-    for (int epoch { 0 }; epoch < epochs; ++epoch) {
+    for (int epoch { 0 }; epoch < config.epochs; ++epoch) {
         
         std::cout << "Epoch " << epoch << '\n';
-        std::cout << "Accuracy: " 
-            << evaluate(val_input, val_label) * 100.0 
+        if (validation.has_value()) {
+            std::cout << "Accuracy: " 
+            << evaluate(validation.value().X, validation.value().y) * 100.0 
             << '\n';
+        }
     
-        for (int start { 0 }; start < num_samples; start += batch_size) {
-            int end = std::min(start + batch_size, num_samples);
+        for (int start { 0 }; start < num_samples; start += config.batch_size) {
+            int end = std::min(start + config.batch_size, num_samples);
 
             Matrix batch_inputs = input.cols(start, end);
             Matrix batch_labels = label.cols(start, end);
         
-            train(batch_inputs, batch_labels, learning_rate);
+            train(batch_inputs, batch_labels, config.learning_rate);
         }
     }
 
-    std::cout << "Final Accuracy: " 
-        << evaluate(val_input, val_label) * 100.0 
+    if (validation.has_value()) {
+        std::cout << "Final Accuracy: " 
+        << evaluate(validation.value().X, validation.value().y) * 100.0 
         << '\n';
+    }
 }
 
 double NeuralNetwork::evaluate(const Matrix& input, const Matrix& labels) const {

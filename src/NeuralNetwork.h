@@ -12,13 +12,27 @@ class NeuralNetwork {
 public:
     NeuralNetwork(const config::Network& config);
 
-    void train(const Matrix& input, const Matrix& label, double learning_rate);
+    void train(
+        const Matrix& input, 
+        const Matrix& label, 
+        double learning_rate
+    );
 
-    void fit(const Matrix& input, const Matrix& label, int epochs, double learning_rate, int batch_size, const Matrix& val_input, const Matrix& val_label);
+    void fit(
+        const Matrix& input, 
+        const Matrix& label, 
+        const config::Training& config, 
+        std::optional<config::Validation> validation = std::nullopt
+    );
 
-    [[nodiscard]] double evaluate(const Matrix& input, const Matrix& labels) const;
+    [[nodiscard]] double evaluate(
+        const Matrix& input, 
+        const Matrix& labels
+    ) const;
 
-    [[nodiscard]] Matrix predict(const Matrix& input) const;
+    [[nodiscard]] Matrix predict(
+        const Matrix& input
+    ) const;
 private:
     loss::Type loss;
     regularization::Type regularization;

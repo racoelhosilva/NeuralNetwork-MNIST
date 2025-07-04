@@ -4,6 +4,7 @@
 #include "Activation.h"
 #include "Initialization.h"
 #include "Loss.h"
+#include "Matrix.h"
 #include "Regularization.h"
 #include <vector>
 
@@ -22,6 +23,17 @@ namespace config {
         regularization::Type regularization_type;
         double lambda1;
         double lambda2;
+    };
+
+    struct Training {
+        int epochs;
+        double learning_rate;
+        int batch_size;
+    };
+
+    struct Validation {
+        const Matrix& X;
+        const Matrix& y;
     };
 }
 
