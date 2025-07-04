@@ -32,12 +32,13 @@ namespace config {
         learning_rate::Type learning_rate_type;
         double learning_rate;
         double k;
+        bool shuffle;
     };
 
     struct Validation {
-        const Matrix& X;
-        const Matrix& y;
-        int patience;
+        Matrix& X;
+        Matrix& y;
+        int patience = 0;
     };
 }
 
