@@ -59,9 +59,7 @@ void NeuralNetwork::fit(
 
         const double learning_rate = learning_rate::current(
             config.learning_rate, 
-            config.learning_rate_type, 
-            epoch, 
-            config.k
+            epoch 
         );
 
         for (int start { 0 }; start < num_samples; start += config.batch_size) {

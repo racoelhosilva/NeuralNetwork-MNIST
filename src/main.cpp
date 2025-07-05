@@ -54,10 +54,12 @@ int main() {
     config::Training training_config {
         .epochs = 100,
         .batch_size = 1,
-        .learning_rate_type = learning_rate::Type::TimeBased,
-        .learning_rate = 0.01,
-        .k = 0.05,
         .shuffle = true,
+        .learning_rate = {
+            .initial = 0.01,
+            .type = learning_rate::Type::TimeBased,
+            .k = 0.05,
+        },
     };
 
     config::Validation validation { 

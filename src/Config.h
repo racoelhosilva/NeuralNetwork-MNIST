@@ -27,10 +27,8 @@ namespace config {
     struct Training {
         int epochs;
         int batch_size;
-        learning_rate::Type learning_rate_type;
-        double learning_rate;
-        double k;
         bool shuffle;
+        learning_rate::settings learning_rate;
     };
 
     struct Validation {
