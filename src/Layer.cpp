@@ -38,10 +38,9 @@ Matrix Layer::loss(const Matrix& label, const Matrix& prediction, loss::Type los
 }
 
 void Layer::update(double learning_rate, 
-    regularization::Type regularization, 
-    double lambda1, double lambda2
+    const regularization::settings& regularization
 ) {
-    const Matrix reg_term = regularization::term(w, regularization, lambda1, lambda2);
+    const Matrix reg_term = regularization::term(w, regularization);
     w -= learning_rate * (dw + reg_term);
     b -= learning_rate * db;
 }

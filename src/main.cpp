@@ -34,30 +34,37 @@ int main() {
 
     /* Training and Testing Model */
 
-    config::Network network_config;
-    network_config.input_size = 784;
-    network_config.layers = {
-        {250, activation::Type::ReLU, initialization::Type::He},
-        {80, activation::Type::Sigmoid, initialization::Type::Glorot},
-        {10, activation::Type::Softmax, initialization::Type::Glorot},
+    config::Network network_config {
+        .input_size = 784,
+        .layers = {
+            {250, activation::Type::ReLU, initialization::Type::He},
+            {80, activation::Type::Sigmoid, initialization::Type::Glorot},
+            {10, activation::Type::Softmax, initialization::Type::Glorot},
+        },
+        .loss_type = loss::Type::CrossEntropy,
+        .regularization = {
+            .type = regularization::Type::L2,
+            .lambda1 = 0.0001,
+            .lambda2 = 0.0001,
+        },
     };
-    network_config.loss_type = loss::Type::CrossEntropy;
-    network_config.regularization_type = regularization::Type::L2;
-    network_config.lambda1 = 0.0001;
-    network_config.lambda2 = 0.0001; 
 
     NeuralNetwork model { network_config };
 
-    config::Training training_config;
-    training_config.epochs = 100;
-    training_config.batch_size = 1;
-    training_config.learning_rate_type = learning_rate::Type::TimeBased;
-    training_config.learning_rate = 0.01;
-    training_config.k = 0.05;
-    training_config.shuffle = true;
+    config::Training training_config {
+        .epochs = 100,
+        .batch_size = 1,
+        .learning_rate_type = learning_rate::Type::TimeBased,
+        .learning_rate = 0.01,
+        .k = 0.05,
+        .shuffle = true,
+    };
 
-    config::Validation validation { test_X, test_y };
-    validation.patience = 20;
+    config::Validation validation { 
+        .X = test_X, 
+        .y = test_y,
+        .patience = 20,
+    };
 
     model.fit(train_X, train_y, training_config, validation);
 

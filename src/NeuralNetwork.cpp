@@ -15,9 +15,7 @@ NeuralNetwork::NeuralNetwork(const config::Network& config) {
         input = l.units;
     }
     loss = config.loss_type;
-    regularization = config.regularization_type;
-    lambda1 = config.lambda1;
-    lambda2 = config.lambda2;
+    regularization = config.regularization;
 }
 
 void NeuralNetwork::train(const Matrix& input, const Matrix& label, double learning_rate) {
@@ -32,7 +30,7 @@ void NeuralNetwork::train(const Matrix& input, const Matrix& label, double learn
     }
 
     for (auto& layer : layers) {
-        layer.update(learning_rate, regularization, lambda1, lambda2);
+        layer.update(learning_rate, regularization);
     }
 }
 

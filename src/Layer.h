@@ -26,9 +26,7 @@ public:
     Matrix forward(const Matrix& a_prev);
     Matrix backward(const Matrix& gradient);
     Matrix loss(const Matrix& label, const Matrix& prediction, loss::Type loss);
-    void update(double learning_rate, 
-        regularization::Type regularization, 
-        double lambda1, double lambda2);
+    void update(double learning_rate, const regularization::settings& regularization);
     Matrix predict(const Matrix& a_prev) const;
 
     activation::Type activation;

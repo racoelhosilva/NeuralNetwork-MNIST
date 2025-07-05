@@ -21,9 +21,7 @@ namespace config {
         int input_size;
         std::vector<config::Layer> layers;
         loss::Type loss_type;
-        regularization::Type regularization_type;
-        double lambda1;
-        double lambda2;
+        regularization::settings regularization;
     };
 
     struct Training {
