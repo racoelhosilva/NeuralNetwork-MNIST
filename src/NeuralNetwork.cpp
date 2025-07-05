@@ -82,7 +82,7 @@ void NeuralNetwork::fit(
                 best_model = std::make_unique<NeuralNetwork>(*this);
                 best_accuracy = accuracy;
                 patience = 0;
-            } else if (validation.value().patience 
+            } else if (validation.value().early_stop
                 && ++patience >= validation.value().patience) {
                 std::cout << "Early stop triggered" << '\n';
                 *this = *best_model;

@@ -34,6 +34,7 @@ namespace config {
     struct Validation {
         Matrix& X;
         Matrix& y;
+        bool early_stop;
         int patience = 0;
     };
 }

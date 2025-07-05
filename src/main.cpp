@@ -65,6 +65,7 @@ int main() {
     config::Validation validation { 
         .X = test_X, 
         .y = test_y,
+        .early_stop = true,
         .patience = 20,
     };
 
