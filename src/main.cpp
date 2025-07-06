@@ -62,8 +62,8 @@ int main() {
         .batch_size = 64,
         .shuffle = true,
         .learning_rate = {
-            .initial = 0.001,
             .type = learning_rate::Type::TimeBased,
+            .initial = 0.001,
             .k = 0.05,
         },
     };

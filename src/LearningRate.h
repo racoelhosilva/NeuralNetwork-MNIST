@@ -11,9 +11,9 @@ namespace learning_rate {
     };
 
     struct settings {
-        double initial;
-        learning_rate::Type type;
-        double k;
+        learning_rate::Type type = Type::Constant;
+        double initial = 0.001;
+        double k = 0.0;
     };
 
     double current(
