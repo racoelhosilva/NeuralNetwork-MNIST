@@ -13,7 +13,7 @@
 namespace config {
 
     struct Layer {
-        int units = 0;
+        int units = 1;
         activation::Type activation_type = activation::Type::Sigmoid;
         initialization::Type initialization_type = initialization::Type::He;
     };
