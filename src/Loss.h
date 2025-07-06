@@ -6,7 +6,7 @@
 
 namespace loss {
 
-    const double EPSILON = 1e-8;
+    inline constexpr double EPSILON = 1e-8;
 
     enum class Type {
         CrossEntropy,
