@@ -43,6 +43,7 @@ void NeuralNetwork::fit(
         std::optional<config::Validation> validation
     ) {
     const int num_samples = input.cols();
+    const int BATCH_PER_EPOCH = (num_samples + config.batch_size - 1) / config.batch_size;
 
     std::unique_ptr<NeuralNetwork> best_model;
     double best_accuracy = std::numeric_limits<double>::lowest();
@@ -51,7 +52,6 @@ void NeuralNetwork::fit(
     std::vector<int> order(num_samples);
     std::iota(order.begin(), order.end(), 0);
 
-    const int BATCH_PER_EPOCH = (num_samples + config.batch_size - 1) / config.batch_size;
 
     for (int epoch { 0 }; epoch < config.epochs; ++epoch) {
         
@@ -91,11 +91,15 @@ void NeuralNetwork::fit(
                 patience = 0;
             } else if (validation.value().early_stop
                 && ++patience >= validation.value().patience) {
-                std::cout << "Early stop triggered" << '\n';
-                *this = *best_model;
+                std::cout << "Early stop triggered." << '\n';
                 break;
             }
         }
+    }
+
+    if (config.best_model) {
+        std::cout << "Restoring best model." << '\n';
+        *this = *best_model;
     }
 
     if (validation.has_value()) {

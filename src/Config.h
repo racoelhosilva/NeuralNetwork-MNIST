@@ -32,6 +32,7 @@ namespace config {
         int batch_size = 32;
         bool shuffle = true;
         learning_rate::settings learning_rate;
+        bool best_model = true;
     };
 
     struct Validation {

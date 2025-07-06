@@ -66,6 +66,7 @@ int main() {
             .initial = 0.001,
             .k = 0.05,
         },
+        .best_model = true,
     };
 
     config::Validation validation { 
