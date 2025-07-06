@@ -11,7 +11,7 @@ static std::mt19937 generator(std::random_device{}());
 NeuralNetwork::NeuralNetwork(const config::Network& config) {
     int input = config.input_size;
     for (const auto& l : config.layers) {
-        layers.push_back({input, l.units, l.activation_type, l.initialization_type, generator});
+        layers.push_back({input, l.units, l.activation_type, l.initialization_type, config.optimizer, generator});
         input = l.units;
     }
     loss = config.loss_type;

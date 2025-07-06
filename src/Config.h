@@ -6,6 +6,7 @@
 #include "LearningRate.h"
 #include "Loss.h"
 #include "Matrix.h"
+#include "Optimizer.h"
 #include "Regularization.h"
 #include <vector>
 
@@ -21,6 +22,7 @@ namespace config {
         int input_size;
         std::vector<config::Layer> layers;
         loss::Type loss_type;
+        optimizer::settings optimizer;
         regularization::settings regularization;
     };
 

@@ -41,8 +41,8 @@ void Layer::update(double learning_rate,
     const regularization::settings& regularization
 ) {
     const Matrix reg_term = regularization::term(w, regularization);
-    w -= learning_rate * (dw + reg_term);
-    b -= learning_rate * db;
+    optimizer_w->update(w, dw + reg_term, learning_rate);
+    optimizer_b->update(b, db, learning_rate);
 }
 
 Matrix Layer::broadcast_col_add(const Matrix& matrix, const Matrix& column) const {

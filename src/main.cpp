@@ -37,11 +37,16 @@ int main() {
     config::Network network_config {
         .input_size = 784,
         .layers = {
-            {250, activation::Type::ReLU, initialization::Type::He},
-            {80, activation::Type::Sigmoid, initialization::Type::Glorot},
+            {16, activation::Type::ReLU, initialization::Type::He},
+            {16, activation::Type::Sigmoid, initialization::Type::Glorot},
             {10, activation::Type::Softmax, initialization::Type::Glorot},
         },
         .loss_type = loss::Type::CrossEntropy,
+        .optimizer = {
+            .type = optimizer::Type::SGD,
+            .beta1 = 0.9,
+            .beta2 = 0.999,
+        },
         .regularization = {
             .type = regularization::Type::L2,
             .lambda1 = 0.0001,

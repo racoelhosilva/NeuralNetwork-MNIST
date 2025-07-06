@@ -4,6 +4,7 @@
 #include "Activation.h"
 #include "Initialization.h"
 #include "Loss.h"
+#include "Optimizer.h"
 #include "Regularization.h"
 #include <random>
 
@@ -11,7 +12,8 @@ class Layer {
 public:
     Layer(int input, int output, 
         activation::Type activation, 
-        initialization::Type initialization, 
+        initialization::Type initialization,
+        optimizer::settings optimizer, 
         std::mt19937& gen
     )
         : activation {activation}
@@ -21,7 +23,10 @@ public:
         , cached_input(input, 1)
         , dw(output, input)
         , db(output, 1)
-    {}
+    {
+        optimizer_w = optimizer::create(output, input, optimizer);
+        optimizer_b = optimizer::create(output, 1, optimizer);
+    }
 
     Matrix forward(const Matrix& a_prev);
     Matrix backward(const Matrix& gradient);
@@ -36,6 +41,9 @@ public:
     Matrix z;
     Matrix cached_input;
     Matrix dw, db;
+
+    std::shared_ptr<optimizer::Base> optimizer_w;
+    std::shared_ptr<optimizer::Base> optimizer_b;
 
 private:
     Matrix broadcast_col_add(const Matrix& matrix, const Matrix& column) const;
