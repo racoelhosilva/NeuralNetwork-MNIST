@@ -171,6 +171,17 @@ Matrix Matrix::matmul(const Matrix& matrix) const {
     return product;
 }
 
+Matrix Matrix::hadamard_div(const Matrix& matrix) const {
+    check_matching_dimensions(matrix);
+    Matrix product { *this };
+    for (int row { 0 }; row < m_rows; ++row) {
+        for (int col { 0 }; col < m_cols; ++col) {
+            product[row, col] /= matrix[row, col];
+        }
+    }
+    return product;
+}
+
 Matrix Matrix::row_avg() const {
     Matrix column {m_rows, 1, 0.0};
     for (int row { 0 }; row < m_rows; ++row) {

@@ -11,13 +11,12 @@ static std::mt19937 generator(std::random_device{}());
 NeuralNetwork::NeuralNetwork(const config::Network& config) {
     int input = config.input_size;
     for (const auto& l : config.layers) {
-        layers.push_back({input, l.units, l.activation_type, l.initialization_type, generator});
+        layers.push_back({input, l.units, l.activation_type, l.initialization_type, config.optimizer, generator});
         input = l.units;
     }
     loss = config.loss_type;
-    regularization = config.regularization_type;
-    lambda1 = config.lambda1;
-    lambda2 = config.lambda2;
+    regularization = config.regularization;
+    weight_decay = config.weight_decay;
 }
 
 void NeuralNetwork::train(const Matrix& input, const Matrix& label, double learning_rate) {
@@ -32,7 +31,7 @@ void NeuralNetwork::train(const Matrix& input, const Matrix& label, double learn
     }
 
     for (auto& layer : layers) {
-        layer.update(learning_rate, regularization, lambda1, lambda2);
+        layer.update(learning_rate, regularization, weight_decay);
     }
 }
 
@@ -61,9 +60,7 @@ void NeuralNetwork::fit(
 
         const double learning_rate = learning_rate::current(
             config.learning_rate, 
-            config.learning_rate_type, 
-            epoch, 
-            config.k
+            epoch 
         );
 
         for (int start { 0 }; start < num_samples; start += config.batch_size) {
@@ -86,7 +83,7 @@ void NeuralNetwork::fit(
                 best_model = std::make_unique<NeuralNetwork>(*this);
                 best_accuracy = accuracy;
                 patience = 0;
-            } else if (validation.value().patience 
+            } else if (validation.value().early_stop
                 && ++patience >= validation.value().patience) {
                 std::cout << "Early stop triggered" << '\n';
                 *this = *best_model;

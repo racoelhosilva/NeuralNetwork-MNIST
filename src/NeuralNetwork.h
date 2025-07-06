@@ -35,9 +35,8 @@ public:
     ) const;
 private:
     loss::Type loss;
-    regularization::Type regularization;
-    double lambda1;
-    double lambda2;
+    regularization::settings regularization;
+    double weight_decay;
     std::vector<Layer> layers;
 
     static Matrix random_cols(const Matrix& data, const std::vector<int>& idx, int start, int end);

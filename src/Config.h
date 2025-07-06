@@ -6,6 +6,7 @@
 #include "LearningRate.h"
 #include "Loss.h"
 #include "Matrix.h"
+#include "Optimizer.h"
 #include "Regularization.h"
 #include <vector>
 
@@ -21,23 +22,22 @@ namespace config {
         int input_size;
         std::vector<config::Layer> layers;
         loss::Type loss_type;
-        regularization::Type regularization_type;
-        double lambda1;
-        double lambda2;
+        double weight_decay = 0.0;
+        optimizer::settings optimizer;
+        regularization::settings regularization;
     };
 
     struct Training {
         int epochs;
         int batch_size;
-        learning_rate::Type learning_rate_type;
-        double learning_rate;
-        double k;
         bool shuffle;
+        learning_rate::settings learning_rate;
     };
 
     struct Validation {
         Matrix& X;
         Matrix& y;
+        bool early_stop;
         int patience = 0;
     };
 }

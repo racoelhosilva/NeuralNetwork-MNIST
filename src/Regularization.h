@@ -11,11 +11,15 @@ namespace regularization {
         Elastic
     };
 
+    struct settings {
+        regularization::Type type;
+        double lambda1;
+        double lambda2;
+    };
+
     Matrix term(
         const Matrix& w, 
-        regularization::Type type, 
-        double lambda1,
-        double lambda2
+        regularization::settings regularization
     );
 }
 

@@ -38,12 +38,15 @@ Matrix Layer::loss(const Matrix& label, const Matrix& prediction, loss::Type los
 }
 
 void Layer::update(double learning_rate, 
-    regularization::Type regularization, 
-    double lambda1, double lambda2
+    const regularization::settings& regularization,
+    double weight_decay
 ) {
-    const Matrix reg_term = regularization::term(w, regularization, lambda1, lambda2);
-    w -= learning_rate * (dw + reg_term);
-    b -= learning_rate * db;
+    const Matrix reg_term = regularization::term(w, regularization);
+    if (weight_decay > 0.0) {
+        w -= learning_rate * weight_decay * w;
+    }
+    optimizer_w->update(w, dw + reg_term, learning_rate);
+    optimizer_b->update(b, db, learning_rate);
 }
 
 Matrix Layer::broadcast_col_add(const Matrix& matrix, const Matrix& column) const {

@@ -10,11 +10,15 @@ namespace learning_rate {
         TimeBased
     };
 
+    struct settings {
+        double initial;
+        learning_rate::Type type;
+        double k;
+    };
+
     double current(
-        double initial, 
-        learning_rate::Type type, 
-        int epoch, 
-        double k
+        const learning_rate::settings& learning_rate,
+        int epoch
     );
 }
 
