@@ -80,6 +80,7 @@ public:
     [[nodiscard]] Matrix transpose() const;
     [[nodiscard]] Matrix hadamard(const Matrix& matrix) const;
     [[nodiscard]] Matrix matmul(const Matrix& matrix) const;
+    [[nodiscard]] Matrix hadamard_div(const Matrix& matrix) const;
 
     [[nodiscard]] Matrix row_avg() const;
     

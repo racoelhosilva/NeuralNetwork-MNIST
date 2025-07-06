@@ -31,6 +31,40 @@ namespace optimizer {
         void update(Matrix& param, const Matrix& grad, double lr) override;
     };
 
+    class Momentum : public Base {
+    public:
+        Momentum(int rows, int cols, double momentum)
+            : velocity(rows, cols), momentum {momentum} {}
+        void update(Matrix& param, const Matrix& grad, double lr) override;
+    private:
+        Matrix velocity;
+        double momentum;
+    };
+
+    class RMSProp : public Base {
+    public:
+        RMSProp(int rows, int cols, double decay, double epsilon)
+            : cache(rows, cols), decay {decay}, epsilon {epsilon} {}
+        void update(Matrix& param, const Matrix& grad, double lr) override;
+    private:
+        Matrix cache;
+        double decay;
+        double epsilon;
+    };
+
+    class Adam : public Base {
+    public:
+        Adam(int rows, int cols, double beta1, double beta2, double epsilon)
+            : m(rows, cols), v(rows, cols)
+            , beta1 {beta1}, beta2 {beta2}, epsilon {epsilon}
+        {}
+        void update(Matrix& param, const Matrix& grad, double lr) override;
+    private:
+        Matrix m, v;
+        double beta1, beta2, epsilon;
+        int t = 0;
+    };
+
     std::shared_ptr<optimizer::Base> create(
         int rows, int cols, 
         const optimizer::settings& optimizer

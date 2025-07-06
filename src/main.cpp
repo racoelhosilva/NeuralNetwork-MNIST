@@ -43,7 +43,7 @@ int main() {
         },
         .loss_type = loss::Type::CrossEntropy,
         .optimizer = {
-            .type = optimizer::Type::SGD,
+            .type = optimizer::Type::Adam,
             .beta1 = 0.9,
             .beta2 = 0.999,
         },
