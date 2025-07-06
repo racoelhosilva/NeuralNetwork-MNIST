@@ -23,6 +23,9 @@ Matrix Layer::backward(const Matrix& gradient) {
 }
 
 Matrix Layer::loss(const Matrix& label, const Matrix& prediction, loss::Type loss) {
+    double loss_metric = loss::compute(label, prediction, loss);
+    std::cout << "Loss: " << loss_metric << '\n';
+
     Matrix delta = loss::gradient(label, 
         prediction, 
         z,
