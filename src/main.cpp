@@ -42,6 +42,7 @@ int main() {
             {10, activation::Type::Softmax, initialization::Type::Glorot},
         },
         .loss_type = loss::Type::CrossEntropy,
+        .weight_decay = 0.0005,
         .optimizer = {
             .type = optimizer::Type::Adam,
             .beta1 = 0.9,

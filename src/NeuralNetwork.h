@@ -36,6 +36,7 @@ public:
 private:
     loss::Type loss;
     regularization::settings regularization;
+    double weight_decay;
     std::vector<Layer> layers;
 
     static Matrix random_cols(const Matrix& data, const std::vector<int>& idx, int start, int end);

@@ -16,6 +16,7 @@ NeuralNetwork::NeuralNetwork(const config::Network& config) {
     }
     loss = config.loss_type;
     regularization = config.regularization;
+    weight_decay = config.weight_decay;
 }
 
 void NeuralNetwork::train(const Matrix& input, const Matrix& label, double learning_rate) {
@@ -30,7 +31,7 @@ void NeuralNetwork::train(const Matrix& input, const Matrix& label, double learn
     }
 
     for (auto& layer : layers) {
-        layer.update(learning_rate, regularization);
+        layer.update(learning_rate, regularization, weight_decay);
     }
 }
 
