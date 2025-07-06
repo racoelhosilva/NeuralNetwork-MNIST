@@ -30,7 +30,7 @@ public:
 
     Matrix forward(const Matrix& a_prev);
     Matrix backward(const Matrix& gradient);
-    Matrix loss(const Matrix& label, const Matrix& prediction, loss::Type loss);
+    std::pair<Matrix, double> loss(const Matrix& label, const Matrix& prediction, loss::Type loss);
     void update(double learning_rate, const regularization::settings& regularization, double weight_decay);
     Matrix predict(const Matrix& a_prev) const;
 

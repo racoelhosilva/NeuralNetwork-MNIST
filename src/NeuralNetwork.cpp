@@ -25,7 +25,8 @@ void NeuralNetwork::train(const Matrix& input, const Matrix& label, double learn
         a = std::move(layer.forward(a));
     }
 
-    Matrix dz = layers.back().loss(label, a, loss);
+    auto[dz, batch_loss] = layers.back().loss(label, a, loss);
+    epoch_loss += batch_loss;
     for (int i = layers.size() - 2; i >= 0; i--) {
         dz = std::move(layers[i].backward(dz));
     }
@@ -50,10 +51,14 @@ void NeuralNetwork::fit(
     std::vector<int> order(num_samples);
     std::iota(order.begin(), order.end(), 0);
 
+    const int BATCH_PER_EPOCH = (num_samples + config.batch_size - 1) / config.batch_size;
+
     for (int epoch { 0 }; epoch < config.epochs; ++epoch) {
         
         std::cout << "Epoch " << epoch+1 << " / " << config.epochs << '\n';
-    
+        
+        epoch_loss = 0.0;
+
         if (config.shuffle) {
             std::shuffle(order.begin(), order.end(), generator);
         }
@@ -72,16 +77,17 @@ void NeuralNetwork::fit(
             train(batch_inputs, batch_labels, learning_rate);
         }
 
+        std::cout << "Epoch loss: " << epoch_loss / BATCH_PER_EPOCH << '\n';
+
         if (validation.has_value()) {
-            double accuracy = evaluate(validation.value().X, validation.value().y);
+            performance::metrics metrics = 
+                evaluate(validation.value().X, validation.value().y, loss);
             
-            std::cout << "Accuracy: " 
-                << accuracy * 100.0 
-                << '\n';
+            std::cout << "Validation " << metrics << '\n';
             
-            if (!best_model || accuracy > best_accuracy) {
+            if (!best_model || metrics.accuracy > best_accuracy) {
                 best_model = std::make_unique<NeuralNetwork>(*this);
-                best_accuracy = accuracy;
+                best_accuracy = metrics.accuracy;
                 patience = 0;
             } else if (validation.value().early_stop
                 && ++patience >= validation.value().patience) {
@@ -93,14 +99,13 @@ void NeuralNetwork::fit(
     }
 
     if (validation.has_value()) {
-        std::cout << "Final Accuracy: " 
-        << evaluate(validation.value().X, validation.value().y) * 100.0 
-        << '\n';
+        std::cout << evaluate(validation.value().X, validation.value().y, loss) << '\n';
     }
 }
 
-double NeuralNetwork::evaluate(const Matrix& input, const Matrix& labels) const {
+performance::metrics NeuralNetwork::evaluate(const Matrix& input, const Matrix& labels, loss::Type loss_type) const {
     Matrix pred = predict(input);
+    const double loss = loss::compute(labels, pred, loss_type);
     double correct = 0;
     for (int col { 0 }; col < labels.cols(); ++col) {
         int prediction = 0;
@@ -117,7 +122,7 @@ double NeuralNetwork::evaluate(const Matrix& input, const Matrix& labels) const 
             correct += 1.0;
         }
     }
-    return correct / labels.cols();
+    return {loss, correct / labels.cols()};
 }
 
 
