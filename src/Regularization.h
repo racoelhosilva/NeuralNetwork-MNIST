@@ -12,9 +12,9 @@ namespace regularization {
     };
 
     struct settings {
-        regularization::Type type;
-        double lambda1;
-        double lambda2;
+        regularization::Type type = Type::None;
+        double lambda1 = 0.0;
+        double lambda2 = 0.0;
     };
 
     Matrix term(

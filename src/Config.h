@@ -13,32 +13,32 @@
 namespace config {
 
     struct Layer {
-        int units;
-        activation::Type activation_type;
-        initialization::Type initialization_type;
+        int units = 0;
+        activation::Type activation_type = activation::Type::Sigmoid;
+        initialization::Type initialization_type = initialization::Type::He;
     };
 
     struct Network {
-        int input_size;
+        int input_size = 0;
         std::vector<config::Layer> layers;
-        loss::Type loss_type;
+        loss::Type loss_type = loss::Type::CrossEntropy;
         double weight_decay = 0.0;
         optimizer::settings optimizer;
         regularization::settings regularization;
     };
 
     struct Training {
-        int epochs;
-        int batch_size;
-        bool shuffle;
+        int epochs = 20;
+        int batch_size = 32;
+        bool shuffle = true;
         learning_rate::settings learning_rate;
     };
 
     struct Validation {
         Matrix& X;
         Matrix& y;
-        bool early_stop;
-        int patience = 0;
+        bool early_stop = true;
+        int patience = 5;
     };
 }
 

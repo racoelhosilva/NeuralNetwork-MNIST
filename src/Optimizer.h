@@ -14,10 +14,10 @@ namespace optimizer {
     };
 
     struct settings {
-        optimizer::Type type;
+        optimizer::Type type = Type::SGD;
         double epsilon = 1e-8;
-        double beta1;
-        double beta2;
+        double beta1 = 0.9;
+        double beta2 = 0.999;
     };
 
     class Base {
