@@ -62,6 +62,8 @@ namespace optimizer {
     private:
         Matrix m, v;
         double beta1, beta2, epsilon;
+        double cache_p1 = 1.0;
+        double cache_p2 = 1.0;
         int t = 0;
     };
 

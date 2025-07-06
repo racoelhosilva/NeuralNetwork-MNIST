@@ -37,8 +37,8 @@ int main() {
     config::Network network_config {
         .input_size = 784,
         .layers = {
-            {16, activation::Type::ReLU, initialization::Type::He},
-            {16, activation::Type::Sigmoid, initialization::Type::Glorot},
+            {64, activation::Type::ReLU, initialization::Type::He},
+            {64, activation::Type::ReLU, initialization::Type::He},
             {10, activation::Type::Softmax, initialization::Type::Glorot},
         },
         .loss_type = loss::Type::CrossEntropy,
@@ -59,10 +59,10 @@ int main() {
 
     config::Training training_config {
         .epochs = 100,
-        .batch_size = 1,
+        .batch_size = 64,
         .shuffle = true,
         .learning_rate = {
-            .initial = 0.01,
+            .initial = 0.001,
             .type = learning_rate::Type::TimeBased,
             .k = 0.05,
         },

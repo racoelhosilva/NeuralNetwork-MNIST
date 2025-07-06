@@ -37,12 +37,14 @@ void optimizer::RMSProp::update(Matrix& param, const Matrix& grad, double lr) {
 
 void optimizer::Adam::update(Matrix& param, const Matrix& grad, double lr) {
     ++t;
+    cache_p1 *= beta1;
+    cache_p2 *= beta2;
 
     m = beta1 * m + (1 - beta1) * grad;
     v = beta2 * v + (1 - beta2) * (grad.hadamard(grad));
 
-    const Matrix m_ = m / (1 - std::pow(beta1, t));
-    const Matrix v_ = v / (1 - std::pow(beta2, t));
+    const Matrix m_ = m / (1 - cache_p1);
+    const Matrix v_ = v / (1 - cache_p2);
 
     const Matrix denom = v_.apply([this](double x) {return std::sqrt(x) + this->epsilon;}); 
     param -= lr * (m_.hadamard_div(denom));
