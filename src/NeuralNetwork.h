@@ -5,6 +5,7 @@
 #include "Layer.h"
 #include "Loss.h"
 #include "Matrix.h"
+#include "Performance.h"
 #include "Regularization.h"
 #include <vector>
 
@@ -25,9 +26,10 @@ public:
         std::optional<config::Validation> validation = std::nullopt
     );
 
-    [[nodiscard]] double evaluate(
+    [[nodiscard]] performance::metrics evaluate(
         const Matrix& input, 
-        const Matrix& labels
+        const Matrix& labels,
+        loss::Type loss_type
     ) const;
 
     [[nodiscard]] Matrix predict(
@@ -38,6 +40,7 @@ private:
     regularization::settings regularization;
     double weight_decay;
     std::vector<Layer> layers;
+    double epoch_loss;
 
     static Matrix random_cols(const Matrix& data, const std::vector<int>& idx, int start, int end);
 };

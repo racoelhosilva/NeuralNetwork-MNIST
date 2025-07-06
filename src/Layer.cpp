@@ -22,9 +22,8 @@ Matrix Layer::backward(const Matrix& gradient) {
     return w.transpose() * delta;
 }
 
-Matrix Layer::loss(const Matrix& label, const Matrix& prediction, loss::Type loss) {
+std::pair<Matrix, double> Layer::loss(const Matrix& label, const Matrix& prediction, loss::Type loss) {
     double loss_metric = loss::compute(label, prediction, loss);
-    std::cout << "Loss: " << loss_metric << '\n';
 
     Matrix delta = loss::gradient(label, 
         prediction, 
@@ -37,7 +36,7 @@ Matrix Layer::loss(const Matrix& label, const Matrix& prediction, loss::Type los
     dw = (delta * cached_input.transpose()) / batch_size;
     db = delta.row_avg();
     
-    return w.transpose() * delta;
+    return {w.transpose() * delta, loss_metric};
 }
 
 void Layer::update(double learning_rate, 
