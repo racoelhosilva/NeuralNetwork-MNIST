@@ -1,8 +1,7 @@
 #include "Performance.h"
+#include <format>
 
 std::ostream& operator<<(std::ostream& out, const performance::metrics& metrics) {
-    out << "Loss: " << metrics.loss 
-        << " | "
-        << "Accuracy: " << metrics.accuracy * 100.0;
+    out << std::format("Loss: {} | Accuracy: {}", metrics.loss, metrics.accuracy * 100.0);
     return out;
 }
