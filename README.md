@@ -1,6 +1,66 @@
-# Neural Network Implementation for MNIST 
+<h1 align=center> Neural Network Implementation for MNIST </h1>
 
 This repository holds a neural network implementation made from scratch using modern C++. The aim was to experiment with different Neural Network operations, hyperparameters and configurations to better understand how they work. For this, I chose the MNIST dataset as it is a simple and well-known example to focus on.
+
+<h2> Table of Contents </h2>
+
+- [Usage](#usage)
+  - [Building the project](#building-the-project)
+  - [Running the project](#running-the-project)
+  - [Download the MNIST dataset](#download-the-mnist-dataset)
+  - [Generating documentation](#generating-documentation)
+- [Features](#features)
+  - [Architecture](#architecture)
+  - [Training](#training)
+  - [Evaluation](#evaluation)
+  - [Approximation](#approximation)
+  - [Generalization](#generalization)
+  - [Utilities](#utilities)
+
+
+## Usage
+
+In order to facilitate the usage, there is a Makefile located on the root directory of the project which contains the utilities described below. Nonetheless, feel free to experiment with different changes in the project such as other parameters, different architectures or even other datasets.
+
+### Building the project
+
+To compile the project, simply run:
+
+```shell
+make
+```
+
+This will build all of the files from the `src/` directory into `build/main`. Changes to the project will most likely require re-building the project.
+
+### Running the project
+
+To run the project, execute the following command:
+
+```shell
+make run
+```
+
+If there have been changes to the project, it will automatically re-build it before running.
+
+### Download the MNIST dataset
+
+To download the MNIST dataset, run:
+
+```shell
+make data
+```
+
+This will download the MNIST dataset from the official source and place it in the `data/` directory. The dataset is split into training and testing sets, each containing images and labels.
+
+### Generating documentation
+
+To generate the documentation for the project, run:
+
+```shell
+make docs
+```
+
+This will use Doxygen to generate the documentation based on the comments in the source code. The generated documentation will be placed in the `docs/` directory in HTML format which can be viewed in a web browser.
 
 ## Features
 
