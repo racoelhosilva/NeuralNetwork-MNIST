@@ -36,7 +36,7 @@ public:
     ) const;
 private:
     loss::Type loss;
-    regularization::settings regularization;
+    regularization::Settings regularization;
     double weight_decay;
     std::vector<Layer> layers;
     double epoch_loss;

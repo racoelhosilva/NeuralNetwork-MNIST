@@ -12,7 +12,7 @@ public:
     Layer(int input, int output, 
         activation::Type activation, 
         initialization::Type initialization,
-        optimizer::settings optimizer, 
+        optimizer::Settings optimizer, 
         std::mt19937& gen
     )
         : activation {activation}
@@ -30,7 +30,7 @@ public:
     Matrix forward(const Matrix& a_prev);
     Matrix backward(const Matrix& gradient);
     std::pair<Matrix, double> loss(const Matrix& label, const Matrix& prediction, loss::Type loss);
-    void update(double learning_rate, const regularization::settings& regularization, double weight_decay);
+    void update(double learning_rate, const regularization::Settings& regularization, double weight_decay);
     Matrix predict(const Matrix& a_prev) const;
 
     activation::Type activation;

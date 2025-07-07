@@ -39,7 +39,7 @@ std::pair<Matrix, double> Layer::loss(const Matrix& label, const Matrix& predict
 }
 
 void Layer::update(double learning_rate, 
-    const regularization::settings& regularization,
+    const regularization::Settings& regularization,
     double weight_decay
 ) {
     const Matrix reg_term = regularization::term(w, regularization);

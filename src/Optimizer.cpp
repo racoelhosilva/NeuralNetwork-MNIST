@@ -1,9 +1,10 @@
 #include "Optimizer.h"
 #include <cmath>
+#include <stdexcept>
 
 std::shared_ptr<optimizer::Base> optimizer::create(
     int rows, int cols, 
-    const optimizer::settings& optimizer
+    const optimizer::Settings& optimizer
 ) {
     switch (optimizer.type) {
         case Type::SGD:
