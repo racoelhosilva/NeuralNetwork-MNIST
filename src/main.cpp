@@ -1,38 +1,37 @@
 #include "Config.h"
 #include "DataLoader.h"
 #include "NeuralNetwork.h"
+#include <format>
 #include <iostream>
 
 int main() {
-    /* Training */
+    /* Training Dataset */
 
-    std::string train_images = "data/train-images-idx3-ubyte"; 
-    std::string train_labels = "data/train-labels-idx1-ubyte";
+    constexpr std::string_view train_images = "data/train-images-idx3-ubyte"; 
+    constexpr std::string_view train_labels = "data/train-labels-idx1-ubyte";
 
-    auto[train_X, train_y] = 
+    auto [train_X, train_y] = 
         mnist::load(train_images, train_labels, 1000);
 
-    std::cout << "Train Dataset: " 
-        << train_X.rows() << " x " << train_X.cols() 
-        << " | "
-        << train_y.rows() << " x " << train_y.cols()
-        << '\n';
+    std::cout << std::format(
+        "Train Dataset: {} x {} | {} x {}\n",
+        train_X.rows(), train_X.cols(), train_y.rows(), train_y.cols()
+    );
     
-    /* Testing */
+    /* Testing Dataset */
 
-    std::string test_images = "data/t10k-images-idx3-ubyte"; 
-    std::string test_labels = "data/t10k-labels-idx1-ubyte";
+    constexpr std::string_view test_images = "data/t10k-images-idx3-ubyte"; 
+    constexpr std::string_view test_labels = "data/t10k-labels-idx1-ubyte";
 
-    auto[test_X, test_y] = 
+    auto [test_X, test_y] = 
         mnist::load(test_images, test_labels, 100);
 
-    std::cout << "Test Dataset: " 
-        << test_X.rows() << " x " << test_X.cols() 
-        << " | "
-        << test_y.rows() << " x " << test_y.cols()
-        << '\n';
+    std::cout << std::format(
+        "Test Dataset: {} x {} | {} x {}\n",
+        test_X.rows(), test_X.cols(), test_y.rows(), test_y.cols()
+    );
 
-    /* Training and Testing Model */
+    /* Model Configuration and Training */
 
     config::Network network_config {
         .input_size = 784,
