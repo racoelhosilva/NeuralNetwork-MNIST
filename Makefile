@@ -7,7 +7,7 @@ OBJ := $(patsubst src/%.cpp, build/%.o, $(SRC))
 OUTDIR := build
 TARGET := $(OUTDIR)/main
 
-.PHONY: all run clean data
+.PHONY: all run clean data docs
 
 all: $(TARGET)
 
@@ -28,3 +28,6 @@ clean:
 
 data:
 	@bash scripts/download_mnist.sh
+
+docs:
+	@doxygen Doxyfile
