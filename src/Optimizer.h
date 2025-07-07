@@ -1,5 +1,4 @@
-#ifndef OPTIMIZER_H
-#define OPTIMIZER_H
+#pragma once
 
 #include "Matrix.h"
 #include <memory>
@@ -72,5 +71,3 @@ namespace optimizer {
         const optimizer::settings& optimizer
     );
 }
-
-#endif

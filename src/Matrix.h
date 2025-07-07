@@ -1,5 +1,4 @@
-#ifndef MATRIX_H
-#define MATRIX_H
+#pragma once
 
 #include <ostream>
 #include <random>
@@ -152,5 +151,3 @@ inline Matrix Matrix::apply(Function&& f) const {
 [[nodiscard]] Matrix operator*(const Matrix& lhs, const Matrix& rhs);
 
 std::ostream& operator<<(std::ostream& out, const Matrix& matrix);
-
-#endif

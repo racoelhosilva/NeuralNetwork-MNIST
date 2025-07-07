@@ -1,5 +1,4 @@
-#ifndef CONFIG_H
-#define CONFIG_H
+#pragma once
 
 #include "Activation.h"
 #include "Initialization.h"
@@ -42,5 +41,3 @@ namespace config {
         int patience = 5;
     };
 }
-
-#endif

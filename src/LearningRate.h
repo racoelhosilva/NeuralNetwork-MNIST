@@ -1,5 +1,4 @@
-#ifndef LEARNING_RATE_H
-#define LEARNING_RATE_H
+#pragma once
 
 namespace learning_rate {
 
@@ -21,5 +20,3 @@ namespace learning_rate {
         int epoch
     );
 }
-
-#endif

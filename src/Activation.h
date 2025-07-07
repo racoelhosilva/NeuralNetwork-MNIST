@@ -1,5 +1,4 @@
-#ifndef ACTIVATION_H
-#define ACTIVATION_H
+#pragma once
 
 #include "Matrix.h"
 
@@ -20,5 +19,3 @@ namespace activation {
     double sigmoid_prime(double val);
     Matrix softmax(const Matrix& logits);
 }
-
-#endif

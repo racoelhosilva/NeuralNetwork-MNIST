@@ -1,5 +1,4 @@
-#ifndef DATA_LOADER_H
-#define DATA_LOADER_H
+#pragma once
 
 #include "Matrix.h"
 #include <cstdint>
@@ -17,5 +16,3 @@ namespace mnist {
         int limit = 0
     );
 }
-
-#endif

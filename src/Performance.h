@@ -1,5 +1,4 @@
-#ifndef PERFORMANCE_H
-#define PERFORMANCE_H
+#pragma once
 
 #include <ostream>
 
@@ -12,6 +11,3 @@ namespace performance {
 }
 
 std::ostream& operator<<(std::ostream& out, const performance::metrics& metrics);
-
-
-#endif

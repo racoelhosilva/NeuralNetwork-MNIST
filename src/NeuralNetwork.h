@@ -1,5 +1,4 @@
-#ifndef NEURAL_NETWORK_H
-#define NEURAL_NETWORK_H
+#pragma once
 
 #include "Config.h"
 #include "Layer.h"
@@ -44,5 +43,3 @@ private:
 
     static Matrix random_cols(const Matrix& data, const std::vector<int>& idx, int start, int end);
 };
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef LOSS_H
-#define LOSS_H
+#pragma once
 
 #include "Activation.h"
 #include "Matrix.h"
@@ -25,5 +24,3 @@ namespace loss {
         activation::Type activation
     );
 }
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef REGULARIZATION_H
-#define REGULARIZATION_H
+#pragma once
 
 #include "Matrix.h"
 
@@ -22,5 +21,3 @@ namespace regularization {
         regularization::settings regularization
     );
 }
-
-#endif

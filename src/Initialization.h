@@ -1,5 +1,4 @@
-#ifndef INITIALIZATION_H
-#define INITIALIZATION_H
+#pragma once
 
 #include "Matrix.h"
 #include <optional>
@@ -26,5 +25,3 @@ namespace initialization {
         );
     }
 }
-
-#endif

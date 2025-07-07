@@ -1,5 +1,4 @@
-#ifndef LAYER_H
-#define LAYER_H
+#pragma once
 
 #include "Activation.h"
 #include "Initialization.h"
@@ -48,5 +47,3 @@ public:
 private:
     Matrix broadcast_col_add(const Matrix& matrix, const Matrix& column) const;
 };
-
-#endif
