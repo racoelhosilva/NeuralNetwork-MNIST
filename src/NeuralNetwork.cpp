@@ -37,11 +37,11 @@ void NeuralNetwork::train(const Matrix& input, const Matrix& label, double learn
 }
 
 void NeuralNetwork::fit(
-        const Matrix& input, 
-        const Matrix& label, 
-        const config::Training& config, 
-        std::optional<config::Validation> validation
-    ) {
+    const Matrix& input, 
+    const Matrix& label, 
+    const config::Training& config, 
+    std::optional<config::Validation> validation
+) {
     const int num_samples = input.cols();
     const int BATCH_PER_EPOCH = (num_samples + config.batch_size - 1) / config.batch_size;
 
@@ -56,17 +56,13 @@ void NeuralNetwork::fit(
     for (int epoch { 0 }; epoch < config.epochs; ++epoch) {
         
         std::cout << "Epoch " << epoch+1 << " / " << config.epochs << '\n';
-        
-        epoch_loss = 0.0;
+        epoch_loss = 0.0;        
+
+        const double learning_rate = learning_rate::current(config.learning_rate, epoch);
 
         if (config.shuffle) {
             std::shuffle(order.begin(), order.end(), generator);
         }
-
-        const double learning_rate = learning_rate::current(
-            config.learning_rate, 
-            epoch 
-        );
 
         for (int start { 0 }; start < num_samples; start += config.batch_size) {
             int end = std::min(start + config.batch_size, num_samples);

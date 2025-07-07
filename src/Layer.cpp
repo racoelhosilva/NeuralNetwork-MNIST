@@ -1,4 +1,5 @@
 #include "Layer.h"
+#include <stdexcept>
 
 Matrix Layer::predict(const Matrix& a_prev) const {
     return activation::apply(broadcast_col_add(w * a_prev, b), activation);
