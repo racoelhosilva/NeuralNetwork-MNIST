@@ -13,8 +13,8 @@ namespace performance {
      * @brief Holds performance metrics for model evaluation.
      */
     struct metrics {
-        [[nodiscard]] double loss = 0.0;
-        [[nodiscard]] double accuracy = 0.0;
+        double loss = 0.0;
+        double accuracy = 0.0;
     };
 }
 

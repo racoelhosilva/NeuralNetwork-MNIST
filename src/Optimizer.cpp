@@ -1,4 +1,5 @@
 #include "Optimizer.h"
+#include <cmath>
 
 std::shared_ptr<optimizer::Base> optimizer::create(
     int rows, int cols, 

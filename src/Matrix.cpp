@@ -99,6 +99,9 @@ Matrix operator*(double scalar, Matrix matrix) {
 }
 
 Matrix& Matrix::operator/=(double scalar) {
+    if (scalar == 0.0) {
+        throw std::invalid_argument("cannot perform division by zero");
+    }
     for (auto& element : m_data) {
         element /= scalar;
     }
@@ -117,13 +120,29 @@ Matrix Matrix::operator-() const {
     return m;
 }
 
-[[nodiscard]] bool operator==(const Matrix& lhs, const Matrix& rhs) {
+/**
+ * @brief Compares two matrices for equality.
+ * @param lhs The left-hand side matrix.
+ * @param rhs The right-hand side matrix.
+ * @return True if the matrices are equal, false otherwise.
+ * @note Two matrices are considered equal if they have the same dimensions and 
+ * all corresponding elements are equal.
+ */
+[[nodiscard]] bool operator==(const Matrix& lhs, const Matrix& rhs) noexcept {
     if (lhs.rows() != rhs.rows()) { return false; }
     if (lhs.cols() != rhs.cols()) { return false; }
     return lhs.m_data == rhs.m_data;
 }
 
-[[nodiscard]] bool operator!=(const Matrix& lhs, const Matrix& rhs) {
+/**
+ * @brief Compares two matrices for inequality.
+ * @param lhs The left-hand side matrix.
+ * @param rhs The right-hand side matrix.
+ * @return True if the matrices are not equal, false otherwise.
+ * @note Two matrices are considered not equal if they differ in dimensions or 
+ * any corresponding elements are not equal.
+ */
+[[nodiscard]] bool operator!=(const Matrix& lhs, const Matrix& rhs) noexcept {
     return !(lhs == rhs);
 }
 
@@ -176,6 +195,9 @@ Matrix Matrix::hadamard_div(const Matrix& matrix) const {
     Matrix product { *this };
     for (int row { 0 }; row < m_rows; ++row) {
         for (int col { 0 }; col < m_cols; ++col) {
+            if (matrix[row, col] == 0.0) {
+                throw std::invalid_argument("cannot perform division by zero in Hadamard division");
+            }
             product[row, col] /= matrix[row, col];
         }
     }
@@ -190,6 +212,16 @@ Matrix Matrix::row_avg() const {
         }
     }
     return column / m_cols;
+}
+
+Matrix Matrix::col_avg() const {
+    Matrix row {1, m_cols, 0.0};
+    for (int col { 0 }; col < m_cols; ++col) {
+        for (int row_idx { 0 }; row_idx < m_rows; ++row_idx) {
+            row[0, col] += (*this)[row_idx, col];
+        }
+    }
+    return row / m_rows;
 }
 
 Matrix operator*(const Matrix& lhs, const Matrix& rhs) {
