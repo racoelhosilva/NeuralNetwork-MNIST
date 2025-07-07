@@ -20,7 +20,7 @@ namespace regularization {
     };
 
     /**
-     * @struct settings
+     * @struct Settings
      * @brief Struct containing settings for regularization.
      */
     struct Settings {
