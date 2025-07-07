@@ -3,9 +3,12 @@
 #include <stdexcept>
 
 double learning_rate::current(
-    const learning_rate::settings& lr,
+    const learning_rate::Settings& lr,
     int epoch
-    ) {
+) {
+    if (epoch < 0) {
+        throw std::invalid_argument("epoch must be non-negative");
+    }
     switch (lr.type) {
         case Type::Constant:
             return lr.initial;

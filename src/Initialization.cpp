@@ -37,11 +37,7 @@ Matrix initialization::init(int rows, int cols, initialization::Type type, std::
 
 template <typename Distribution>
 Matrix initialization::detail::random(int rows, int cols, Distribution&& dist, std::mt19937 &gen) {
-    std::vector<double> data(rows * cols);
-
-    for (auto& elem : data) {
-        elem = dist(gen);
-    }
-
+    std::vector<double> data(static_cast<std::size_t>(rows * cols));
+    std::generate(data.begin(), data.end(), [&] { return dist(gen); });
     return Matrix(rows, cols, std::move(data));
 }

@@ -1,9 +1,15 @@
 #include "DataLoader.h"
+#include <array>
+#include <format>
 #include <fstream>
+#include <stdexcept>
 
-static int32_t read_header_int(std::ifstream& file) {
-    uint8_t value[4];
-    file.read(reinterpret_cast<char*>(value), 4);
+/**
+ * @brief Reads a 4-byte big-endian integer from the file.
+ */
+[[nodiscard]] static int32_t read_header_int(std::ifstream& file) {
+    std::array<uint8_t, 4> value;
+    file.read(reinterpret_cast<char*>(value.data()), 4);
     return value[0] << 24
         | value[1] << 16
         | value[2] << 8
@@ -11,14 +17,14 @@ static int32_t read_header_int(std::ifstream& file) {
 }
 
 std::pair<Matrix, Matrix> mnist::load(
-    const std::string& image_path,
-    const std::string& label_path,
+    std::string_view image_path,
+    std::string_view label_path,
     int limit
 ) {
-    std::ifstream images { image_path, std::ios::binary };
+    std::ifstream images { std::string(image_path), std::ios::binary };
     if (!images) { throw std::runtime_error("could not open MNIST images file"); }
 
-    std::ifstream labels { label_path, std::ios::binary };
+    std::ifstream labels { std::string(label_path), std::ios::binary };
     if (!labels) { throw std::runtime_error("could not open MNIST labels file"); }
 
     if (read_header_int(images) != mnist::IMAGE_MAGIC || 
@@ -41,12 +47,19 @@ std::pair<Matrix, Matrix> mnist::load(
     Matrix X(rows * cols, limit);
     Matrix y(mnist::label_range, limit);
     
-    std::vector<uint8_t> buffer(rows * cols);
+    std::vector<uint8_t> buffer(static_cast<size_t>(rows * cols));
     uint8_t label;
 
     for (int col { 0 }; col < limit; ++col) {
-        images.read(reinterpret_cast<char*>(buffer.data()), buffer.size());
-        labels.read(reinterpret_cast<char*>(&label), 1);
+        if (!images.read(reinterpret_cast<char*>(buffer.data()), 
+            static_cast<std::streamsize>(buffer.size()))) {
+                throw std::runtime_error(
+                    std::format("failed to read image data at sample {}", col));
+        }
+        if (!labels.read(reinterpret_cast<char*>(&label), 1)) {
+            throw std::runtime_error(
+                std::format("failed to read label data at sample {}", col));
+        }
 
         for (int row { 0 }; row < X.rows(); ++row) {
             X[row, col] = buffer[row] / 255.0;

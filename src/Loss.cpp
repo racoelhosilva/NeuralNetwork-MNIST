@@ -3,9 +3,10 @@
 #include <format>
 #include <stdexcept>
 
-double loss::compute(const Matrix& label,
-        const Matrix& prediction,
-        loss::Type type
+double loss::compute(
+    const Matrix& label,
+    const Matrix& prediction,
+    loss::Type type
 ) {
     const int ROWS = label.rows();
     const int COLS = label.cols();
@@ -43,12 +44,13 @@ double loss::compute(const Matrix& label,
     }
 }
 
-Matrix loss::gradient(const Matrix &label, 
-        const Matrix &prediction, 
-        const Matrix &z, 
-        loss::Type type, 
-        activation::Type activation
-    ) {
+Matrix loss::gradient(
+    const Matrix &label, 
+    const Matrix &prediction, 
+    const Matrix &z, 
+    loss::Type type, 
+    activation::Type activation
+) {
     switch (type) {
         case Type::CrossEntropy:
             if (activation == activation::Type::Softmax

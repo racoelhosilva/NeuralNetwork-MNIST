@@ -1,6 +1,7 @@
 #include "Activation.h"
 #include <algorithm>
 #include <cmath>
+#include <stdexcept>
 
 Matrix activation::apply(const Matrix& matrix, activation::Type type) {
     switch (type) {
@@ -28,19 +29,19 @@ Matrix activation::apply_prime(const Matrix& matrix, activation::Type type) {
     }
 }
 
-double activation::ReLU(double val) {
+double activation::ReLU(double val) noexcept {
     return val >= 0.0 ? val : 0.0;
 }
 
-double activation::ReLU_prime(double val) {
+double activation::ReLU_prime(double val) noexcept {
     return val >= 0.0 ? 1.0 : 0.0;
 }
 
-double activation::sigmoid(double val) {
+double activation::sigmoid(double val) noexcept {
     return 1.0 / (1.0 + std::exp(-val));
 }
 
-double activation::sigmoid_prime(double val) {
+double activation::sigmoid_prime(double val) noexcept {
     const double sigmoid = 1.0 / (1.0 + std::exp(-val));
     return sigmoid * (1.0 - sigmoid);
 }
@@ -64,6 +65,10 @@ Matrix activation::softmax(const Matrix& logits) {
             sum_exp += exp;
         }
         
+        if (sum_exp == 0.0) {
+            throw std::logic_error("softmax encountered zero sum in column");
+        }
+
         double inverse_sum = 1 / sum_exp;
         for (int row { 0 }; row < rows; ++row) {
             out[row, col] *= inverse_sum;

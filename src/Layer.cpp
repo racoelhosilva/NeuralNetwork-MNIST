@@ -1,4 +1,5 @@
 #include "Layer.h"
+#include <stdexcept>
 
 Matrix Layer::predict(const Matrix& a_prev) const {
     return activation::apply(broadcast_col_add(w * a_prev, b), activation);
@@ -39,7 +40,7 @@ std::pair<Matrix, double> Layer::loss(const Matrix& label, const Matrix& predict
 }
 
 void Layer::update(double learning_rate, 
-    const regularization::settings& regularization,
+    const regularization::Settings& regularization,
     double weight_decay
 ) {
     const Matrix reg_term = regularization::term(w, regularization);
